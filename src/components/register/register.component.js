@@ -12,7 +12,7 @@ class RegisterPage extends React.Component {
         this.state = {
             user: {
                 fullName: '',
-                birthday: {},
+                birthday: null,
                 username: '',
                 email: '',
                 password: '',
@@ -96,7 +96,7 @@ class RegisterPage extends React.Component {
                         floatingLabelText="Birthday"
                         name="birthday"
                         value={user.birthday}
-                        errorText={submitted && !user.birthday ? "Birthday is Required": null}
+                        errorText={submitted && user.birthday=== null ? "Birthday is Required": null}
                         onChange={this.handleBirthdayChange} />
                 </div>
                 <div>

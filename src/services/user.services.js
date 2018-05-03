@@ -18,8 +18,8 @@ function register(user) {
         body: JSON.stringify({
             user_name: user.username,
             email: user.email,
-            full_name: user.fullName,
-            birthday: user.birthday,
+            first_name: user.firstName,
+            last_name: user.lastName,
             password: user.password,
             password_confirmation: user.passwordConfirmation})
     };
@@ -65,7 +65,7 @@ function getAll() {
         headers: authHeader()
     };
 
-    return fetch(process.env.SOCCER_SOCIAL_NETWORK_API + '/users', requestOptions).then(handleResponse);
+    return fetch(process.env.SSN_API + '/users', requestOptions).then(handleResponse);
 }
 
 function getByUserName(username) {

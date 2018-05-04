@@ -14,7 +14,7 @@ import {
   LibraryBooks,
   BubbleChart,
   LocationOn,
-  Notifications
+  PowerSettingsNew
 } from "@material-ui/icons";
 
 const dashboardRoutes = [
@@ -68,10 +68,10 @@ const dashboardRoutes = [
     component: Maps
   },
   {
-    path: "/notifications",
-    sidebarName: "Notifications",
-    navbarName: "Notifications",
-    icon: Notifications,
+    path: "/logout",
+    sidebarName: "Logout",
+    navbarName: "Logout",
+    icon: PowerSettingsNew,
     component: NotificationsPage
   },
   { redirect: true, path: "/", to: "/dashboard", navbarName: "Redirect" }

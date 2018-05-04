@@ -15,7 +15,7 @@ function CustomInput({ ...props }) {
     labelProps,
     inputProps,
     error,
-    success,
+    success
   } = props;
 
   const labelClasses = cx({
@@ -30,7 +30,6 @@ function CustomInput({ ...props }) {
   const marginTop = cx({
     [classes.marginTop]: labelText === undefined
   });
-
   return (
     <FormControl
       {...formControlProps}
@@ -71,8 +70,7 @@ CustomInput.propTypes = {
   inputProps: PropTypes.object,
   formControlProps: PropTypes.object,
   error: PropTypes.bool,
-  success: PropTypes.bool,
-  onChange: PropTypes.func
+  success: PropTypes.bool
 };
 
 export default withStyles(customInputStyle)(CustomInput);

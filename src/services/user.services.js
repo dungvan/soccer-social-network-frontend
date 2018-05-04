@@ -38,8 +38,8 @@ function login(username, password) {
 
     return fetch('http://localhost/users/login', requestOptions)
         .then(response => {
-            if (!response.ok) { 
-                return Promise.reject(response.statusText);
+            if (response.status !== 200) { 
+                return Promise.reject(response.json());
             }
             return response.json();
         })
@@ -49,8 +49,7 @@ function login(username, password) {
                 // store user details and jwt token in local storage to keep user logged in between page refreshes
                 localStorage.setItem('user', JSON.stringify(user));
             }
-            
-            return user;
+            return user, {};
         });
 }
 
@@ -74,17 +73,18 @@ function getByUserName(username) {
         headers: authHeader()
     };
 
-    return fetch(process.env.SOCCER_SOCIAL_NETWORK_API + '/users/' + username, requestOptions).then(handleResponse);
+    return fetch('http://localhost/users/' + username, requestOptions).then(handleResponse);
 }
 
 function update(user) {
     const requestOptions = {
         method: 'PUT',
-        headers: { ...authHeader(), 'Content-Type': 'application/json' },
-        body: JSON.stringify(user)
+        mode: 'CORS',
+        headers: { ...authHeader() },
+        body: JSON.stringify({city:user.city, country: user.country, first_name: user.firstName, last_name: user.lastName, birthday: user.birthday, about: user.about, quote: user.quote})
     };
 
-    return fetch(process.env.SOCCER_SOCIAL_NETWORK_API + '/users/' + user.id, requestOptions).then(handleResponse);;
+    return fetch('http://localhost/users/' + user.id, requestOptions).then(handleResponse);;
 }
 
 // prefixed function name with underscore because delete is a reserved word in javascript
@@ -94,13 +94,12 @@ function _delete(id) {
         headers: authHeader()
     };
 
-    return fetch(process.env.SOCCER_SOCIAL_NETWORK_API + '/users/' + id, requestOptions).then(handleResponse);;
+    return fetch('http://localhost/users/' + id, requestOptions).then(handleResponse);;
 }
 
 function handleResponse(response) {
-    if (!response.ok) { 
-        return Promise.reject(response.statusText);
+    if (response.status !== 200) {
+        return Promise.reject(response.json());
     }
-
-    return response.json();
+    return response.json()
 }

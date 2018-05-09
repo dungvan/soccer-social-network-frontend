@@ -1,29 +1,20 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { Switch, Route, Redirect } from "react-router-dom";
+import { Route, Redirect } from "react-router-dom";
 // creates a beautiful scrollbar
 import PerfectScrollbar from "perfect-scrollbar";
 import "perfect-scrollbar/css/perfect-scrollbar.css";
 import { withStyles } from "material-ui";
 
 import { Header, Footer, Sidebar } from "components";
-
-import dashboardRoutes from "routes/dashboard.jsx";
-
+import { AuthRoutes, authSidebar } from "routes/Auth/authRoutes.jsx"
+import { AdminRoutes, adminSidebar } from "routes/Admin/adminRoutes.jsx";
+import { isAuthenticated, isSuperAdmin, getCurrentUsername } from "utils/auth-user";
 import appStyle from "assets/jss/material-dashboard-react/appStyle.jsx";
-
+import AuthPage from "views/Auth/Auth.jsx";
 import image from "assets/img/sidebar-2.jpg";
 import logo from "assets/img/reactlogo.png";
-
-const switchRoutes = (
-  <Switch>
-    {dashboardRoutes.map((prop, key) => {
-      if (prop.redirect)
-        return <Redirect from={prop.path} to={prop.to} key={key} />;
-      return <Route path={prop.path} component={prop.component} key={key} />;
-    })}
-  </Switch>
-);
+import UserProfile from "../views/UserProfile/UserProfile";
 
 class App extends React.Component {
   state = {
@@ -32,9 +23,6 @@ class App extends React.Component {
   handleDrawerToggle = () => {
     this.setState({ mobileOpen: !this.state.mobileOpen });
   };
-  getRoute() {
-    return this.props.location.pathname !== "/maps";
-  }
   componentDidMount() {
     if(navigator.platform.indexOf('Win') > -1){
       // eslint-disable-next-line
@@ -49,8 +37,12 @@ class App extends React.Component {
     return (
       <div className={classes.wrapper}>
         <Sidebar
-          routes={dashboardRoutes}
-          logoText={"Creative Tim"}
+          routes={
+            isAuthenticated() ? (
+              isSuperAdmin()? adminSidebar: null
+            ):authSidebar
+          }
+          logoText={"Soccer Social"}
           logo={logo}
           image={image}
           handleDrawerToggle={this.handleDrawerToggle}
@@ -60,19 +52,24 @@ class App extends React.Component {
         />
         <div className={classes.mainPanel} ref="mainPanel">
           <Header
-            routes={dashboardRoutes}
+            routes={
+              isAuthenticated() ? (
+                isSuperAdmin()? adminSidebar: null
+              ):authSidebar
+            }
             handleDrawerToggle={this.handleDrawerToggle}
             {...rest}
           />
-          {/* On the /maps route we want the map to be on full screen - this is not possible if the content and conatiner classes are present because they have some paddings which would make the map smaller */}
-          {this.getRoute() ? (
-            <div className={classes.content}>
-              <div className={classes.container}>{switchRoutes}</div>
+          <div className={classes.content}>
+            <div className={classes.container}>
+              {
+                isAuthenticated() ? (
+                  isSuperAdmin() ? <AdminRoutes />:null
+                ):<AuthRoutes />
+              }
             </div>
-          ) : (
-            <div className={classes.map}>{switchRoutes}</div>
-          )}
-          {this.getRoute() ? <Footer /> : null}
+          </div>
+          <Footer />
         </div>
       </div>
     );

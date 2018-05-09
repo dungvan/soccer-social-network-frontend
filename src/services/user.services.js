@@ -38,8 +38,11 @@ function login(username, password) {
 
     return fetch('http://localhost/users/login', requestOptions)
         .then(response => {
-            if (response.status !== 200) { 
-                return Promise.reject(response.json());
+            if (response.status !== 200) {
+                if (response.status === 400) {
+                    return Promise.reject({bodyUsed: true, data: response.json()})
+                }
+                return Promise.reject({bodyUsed: false, message: response.statusText});
             }
             return response.json();
         })
@@ -49,7 +52,7 @@ function login(username, password) {
                 // store user details and jwt token in local storage to keep user logged in between page refreshes
                 localStorage.setItem('user', JSON.stringify(user));
             }
-            return user, {};
+            return user;
         });
 }
 
@@ -58,13 +61,14 @@ function logout() {
     localStorage.removeItem('user');
 }
 
-function getAll() {
+function getAll(page) {
     const requestOptions = {
         method: 'GET',
+        mode: 'CORS',
         headers: authHeader()
     };
 
-    return fetch(process.env.SSN_API + '/users', requestOptions).then(handleResponse);
+    return fetch('http://localhost/users?page=' + page, requestOptions).then(handleResponse);
 }
 
 function getByUserName(username) {
@@ -81,10 +85,10 @@ function update(user) {
         method: 'PUT',
         mode: 'CORS',
         headers: { ...authHeader() },
-        body: JSON.stringify({city:user.city, country: user.country, first_name: user.firstName, last_name: user.lastName, birthday: user.birthday, about: user.about, quote: user.quote})
+        body: JSON.stringify(user)
     };
 
-    return fetch('http://localhost/users/' + user.id, requestOptions).then(handleResponse);;
+    return fetch('http://localhost/users/' + user.id, requestOptions).then(handleResponse);
 }
 
 // prefixed function name with underscore because delete is a reserved word in javascript
@@ -94,12 +98,15 @@ function _delete(id) {
         headers: authHeader()
     };
 
-    return fetch('http://localhost/users/' + id, requestOptions).then(handleResponse);;
+    return fetch('http://localhost/users/' + id, requestOptions).then(handleResponse);
 }
 
 function handleResponse(response) {
     if (response.status !== 200) {
-        return Promise.reject(response.json());
+        if (response.status !== 400) {
+            return Promise.reject({bodyUsed: false, message: response.statusText})
+        }
+        return Promise.reject({bodyUsed: true, data: response.json()});
     }
     return response.json()
 }

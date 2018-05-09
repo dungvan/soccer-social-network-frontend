@@ -14,10 +14,11 @@ import cx from "classnames";
 import headerStyle from "assets/jss/material-dashboard-react/headerStyle.jsx";
 
 import HeaderLinks from "./HeaderLinks";
+import { isAuthenticated } from "../../utils";
 
 function Header({ ...props }) {
   function makeBrand() {
-    var name;
+    var name = "";
     props.routes.map((prop, key) => {
       if (prop.path === props.location.pathname) {
         name = prop.navbarName;
@@ -35,12 +36,14 @@ function Header({ ...props }) {
       <Toolbar className={classes.container}>
         <div className={classes.flex}>
           {/* Here we create navbar brand, based on route name */}
-          <Button href="#" className={classes.title}>
+          <Button className={classes.title}>
             {makeBrand()}
           </Button>
         </div>
         <Hidden smDown implementation="css">
-          <HeaderLinks />
+        {
+          isAuthenticated() && <HeaderLinks />
+        }
         </Hidden>
         <Hidden mdUp>
           <IconButton

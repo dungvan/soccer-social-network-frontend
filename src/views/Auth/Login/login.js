@@ -2,8 +2,10 @@
 import React from 'react';
 import {Link} from 'react-router-dom';
 import {connect} from 'react-redux';
-
-import {userActions} from '../../../actions';
+import validator from 'validator';
+import { isEmpty } from 'lodash';
+import { bindActionCreators } from 'redux';
+import { actions, userActions } from '../../../actions';
 import { Grid, InputLabel } from "material-ui";
 import { CircularProgress } from 'material-ui/Progress';
 import {
@@ -13,6 +15,7 @@ import {
   ItemGrid
 } from "components";
 import { isAuthenticated } from "utils";
+import { userConstants } from '../../../constants/post.constants';
 
 class LoginForm extends React.Component {
   constructor(props) {
@@ -20,7 +23,9 @@ class LoginForm extends React.Component {
     this.state = {
       username: '',
       password: '',
-      submitted: false
+      submitted: false,
+      formErrors: {},
+      errorMessage: []
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -32,19 +37,50 @@ class LoginForm extends React.Component {
     this.setState({[name]: value});
   }
 
-  handleSubmit(e) {
+  handleSubmit = async e => {
     e.preventDefault();
     this.setState({submitted: true});
-    const {username, password} = this.state;
-    const {dispatch} = this.props;
-    if (username && password) {
-      dispatch(userActions.login(username, password));
+    const { username, password } = this.state;
+    const {formErrors, isValid} = this._validate({ username, password })
+    this.setState({ formErrors, errorMessage: [] })
+    if (!isValid) {
+      return
+    }
+
+    try {
+      await this.props.login(username, password)
+      this.props.history.push("/")
+      window.location.reload()
+    } catch(e) {
+      if (e.bodyUsed) {
+        e.data.then(error => {
+          this.props.dishpathFailure(userConstants.LOGIN_FAILURE, error)
+          this.setState({errorMessage: error.errors})
+        });
+        return
+      }
+      this.props.dishpathFailure(userConstants.LOGIN_FAILURE, {message: e.message, errors: null})
+    }
+  }
+
+  _validate(formData) {
+    const formErrors = {}
+    if(validator.isEmpty(formData.username)) {
+      formErrors.username = "This field is required"
+    }
+    if(validator.isEmpty(formData.password)) {
+      formErrors.password = "This field is required"
+    }
+
+    return {
+      formErrors,
+      isValid: isEmpty(formErrors) ? true : false
     }
   }
 
   render() {
-    const {history, classes, loggingIn, loggedIn} = this.props;
-    const {username, password} = this.state;
+    const {classes, loggingIn, loggedIn} = this.props;
+    const {username, password, formErrors, errorMessage} = this.state;
     return (
       <div>
         <RegularCard
@@ -61,9 +97,11 @@ class LoginForm extends React.Component {
                       {
                         onChange: this.handleChange,
                         name: "username",
-                        value: username
+                        value: username,
                       }
                     }
+                    error={!!formErrors.username}
+                    errorLabel={formErrors.username}
                     formControlProps={{
                       fullWidth: true
                     }}/>
@@ -83,12 +121,19 @@ class LoginForm extends React.Component {
                           value: password
                         }
                       }
+                      error={!!formErrors.password}
+                      errorLabel={formErrors.password}
                       formControlProps={{
                         fullWidth: true
                       }}
                     />
                   </ItemGrid>
                 </Grid>
+                {
+                  errorMessage.map((message, index) => {
+                    return <p key={index} style={{color:"red"}}>{message}</p>
+                  })
+                }
             </div>
           }
           footer={
@@ -96,9 +141,6 @@ class LoginForm extends React.Component {
               <Button color="primary" onClick={this.handleSubmit}>Login</Button>
               {
                 loggingIn && <img src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />
-              }
-              {
-                loggedIn && history.push("/")
               }
             </div>
           }
@@ -113,5 +155,8 @@ function mapStateToProps(state) {
   return {loggingIn};
 }
 
-const connectedLoginForm = connect(mapStateToProps)(LoginForm);
+const connectedLoginForm = connect(mapStateToProps, {
+  login: userActions.login,
+  dishpathFailure: actions.failure 
+})(LoginForm);
 export { connectedLoginForm as LoginForm};

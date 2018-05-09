@@ -11,11 +11,11 @@ const styles = theme => ({
   },
 });
 
-function AuthPage() {
+function AuthPage(props) {
   return (
     <Grid container>
       <ItemGrid xs={12} sm={12} md={5}>
-        <LoginForm />
+        <LoginForm history={props.history} />
       </ItemGrid>
       <ItemGrid xs={12} sm={12} md={7}>
         <RegisterForm />

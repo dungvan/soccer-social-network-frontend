@@ -1,18 +1,50 @@
 import { userConstants } from '../constants';
+import { isCurrentUser } from '../utils';
 
-export function users(state = {}, action) {
+export function users(state = {items:[], user: {}, total: 0}, action) {
   switch (action.type) {
+    case userConstants.GETBY_USERNAME_REQUEST:
+      return {
+        ...state,
+        username: !!action.data.username ? action.data.username:"",
+        loading: true,
+      };
+    case userConstants.GETBY_USERNAME_SUCCESS:
+      return {
+        ...state,
+        editable: isCurrentUser(action.data.user) || action.data.user.role === "s_admin",
+        loading:false,
+        user: action.data.user
+      };
+    case userConstants.GETBY_USERNAME_FAILURE:
+      return {
+        ...state,
+        editable: false,
+        loading: false,
+        user:{},
+        message: action.message,
+        errors: action.errors,
+        username: !!action.data.username ? action.data.username : ""
+      };
     case userConstants.GETALL_REQUEST:
       return {
+        ...state,
+        page: action.data.page ? action.data.page : 1,
         loading: true
       };
     case userConstants.GETALL_SUCCESS:
       return {
-        items: action.users
+        ...state,
+        total: !!action.data.total ? action.data.total : 0,
+        items: action.data.users,
+        loading: false
       };
     case userConstants.GETALL_FAILURE:
       return { 
-        error: action.error
+        ...state,
+        loading: false,
+        message: action.message,
+        errors: action.error.errors
       };
     case userConstants.DELETE_REQUEST:
       // add 'deleting:true' property to user being deleted
@@ -40,7 +72,6 @@ export function users(state = {}, action) {
             // return copy of user with 'deleteError:[error]' property
             return { ...userCopy, deleteError: action.error };
           }
-
           return user;
         })
       };

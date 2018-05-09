@@ -15,6 +15,7 @@ function CustomInput({ ...props }) {
     labelProps,
     inputProps,
     error,
+    errorLabel,
     success
   } = props;
 
@@ -55,6 +56,10 @@ function CustomInput({ ...props }) {
       />
       {error ? (
         <Clear className={classes.feedback + " " + classes.labelRootError} />
+        &&
+        <p className={classes.labelRootError}>
+          {errorLabel}
+        </p>
       ) : success ? (
         <Check className={classes.feedback + " " + classes.labelRootSuccess} />
       ) : null}

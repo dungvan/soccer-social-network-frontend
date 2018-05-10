@@ -1,8 +1,7 @@
 import React, { Component } from "react";
-import {connect} from 'react-redux';
-import { NavLink } from 'react-router-dom';
+import { connect } from 'react-redux';
 
-import {postActions} from '../../actions';
+import { postActions } from '../../actions';
 import { RegularCard, ItemGrid } from "components";
 import {
   IconButton,
@@ -12,18 +11,17 @@ import {
   TableRow,
   TableBody,
   TableCell,
-  TableFooter
+  TableFooter,
+  TablePagination
 } from "material-ui";
 
 import {
-  Delete,
-  Edit
+  Delete
 } from '@material-ui/icons';
 
 import "assets/jss/material-dashboard-react/tableStyle";
-import { TablePagination } from "material-ui";
 
-export class UserList extends Component {
+export class PostList extends Component {
 
   constructor(props) {
     super(props)
@@ -35,7 +33,6 @@ export class UserList extends Component {
   }
 
   handleChangePage = (event, page) => {
-    console.log(page)
     this.setState({ page });
     this.props.getAll(page + 1)
   };
@@ -124,5 +121,5 @@ function mapStateToProps(state) {
 export default connect(mapStateToProps, {
   getAll: postActions.getAll,
   delete: postActions.delete
-})(UserList);
+})(PostList);
 

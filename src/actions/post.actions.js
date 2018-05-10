@@ -1,5 +1,5 @@
 import { postConstants } from '../constants';
-import { postService } from '../services';
+import { postService } from 'services';
 import { actions } from './';
 
 export const postActions = {

@@ -51,7 +51,7 @@ export function users(state = {items: [], user: {}, total: 0, page: 1}, action) 
       return {
         ...state,
         items: state.items.map(user =>
-          user.id === action.id
+          user.id === action.data.id
             ? { ...user, deleting: true }
             : user
         )
@@ -59,7 +59,9 @@ export function users(state = {items: [], user: {}, total: 0, page: 1}, action) 
     case userConstants.DELETE_SUCCESS:
       // remove deleted user from state
       return {
-        items: state.items.filter(user => user.id !== action.id)
+        ...state,
+        total: state.total - 1,
+        items: state.items.filter(user => user.id !== action.data.id)
       };
     case userConstants.DELETE_FAILURE:
       // remove 'deleting:true' property and add 'deleteError:[error]' property to user 

@@ -13,6 +13,7 @@ import {
 import avatar from "assets/img/faces/marc.jpg";
 import { actions, userActions } from "../../actions";
 import { postConstants } from "../../constants/post.constants";
+import { isSuperAdmin } from "../../utils";
 
 class UserProfile extends Component {
   constructor(props) {
@@ -41,6 +42,19 @@ class UserProfile extends Component {
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
+
+  _dateString(date) {
+    let dateString = "1990-01-01";
+    if (!!date) {
+      const day = date.getDate();
+      let dayString = day < 10 ? ("0"+day):day;
+      const month = date.getMonth()+1;
+      let monthString = month < 10 ? ("0"+month):month;
+      dateString = date.getFullYear()+"-"+ monthString+"-"+dayString;
+    } 
+    return dateString
+  }
+
   async componentWillMount(){
     try {
       await this.props.getByUsername(this.props.match.params.username).then(
@@ -48,7 +62,7 @@ class UserProfile extends Component {
           this.props.dispatchSuccess(postConstants.GETONE_SUCCESS, {user: response})
           this.setState({
             user: response,
-            editable: isCurrentUser(response) || response.role === "s_admin",
+            editable: isCurrentUser(response) || isSuperAdmin(),
             dateString: this._dateString(response.birthday)
           })
         }

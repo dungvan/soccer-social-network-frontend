@@ -3,6 +3,7 @@ import DashboardPage from "views/Dashboard/Dashboard.jsx";
 import UserProfile from "views/UserProfile/UserProfile.jsx";
 import UserList from "views/UserList/UserList.jsx";
 import PostList from "views/PostList/PostList";
+import TeamList from "views/TeamList/TeamList";
 import { Switch, Route } from "react-router-dom";
 
 import {
@@ -18,6 +19,7 @@ const AdminRoutes = () => {
       <Route path="/admin/user/:username" component={UserProfile} />
       <Route path="/admin/users" component={UserList} />
       <Route path="/admin/posts" component={PostList} />
+      <Route path="/admin/teams" component={TeamList} />
     </Switch>
   );
 }

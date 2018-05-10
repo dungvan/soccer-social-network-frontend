@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 import { NavLink } from 'react-router-dom';
 
 import {userActions} from '../../actions';
@@ -35,7 +35,6 @@ export class UserList extends Component {
   }
 
   handleChangePage = (event, page) => {
-    console.log(page)
     this.setState({ page });
     this.props.getAll(page + 1)
   };

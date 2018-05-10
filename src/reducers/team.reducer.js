@@ -1,28 +1,28 @@
-import { postConstants } from "../constants";
+import { teamConstants } from "../constants";
 
-export function posts(state = {items: [], post: {}, total: 0, page: 1}, action) {
+export function teams(state = {items: [], team: {master: {}, players: [], description: ''}, total: 0, page: 1}, action) {
   switch (action.type) {
-    case postConstants.GETALL_REQUEST:
+    case teamConstants.GETALL_REQUEST:
       return {
         ...state,
         page: action.data.page ? action.data.page : 1,
         loading: true
       }
-    case postConstants.GETALL_SUCCESS:
+    case teamConstants.GETALL_SUCCESS:
       return {
         ...state,
         total: !!action.data.total ? action.data.total : 0,
-        items: action.data.posts,
+        items: action.data.teams,
         loading: true
       }
-    case postConstants.GETALL_FAILURE:
+    case teamConstants.GETALL_FAILURE:
       return { 
         ...state,
         loading: false,
         message: action.message,
         errors: action.errors
       };
-    case postConstants.DELETE_REQUEST:
+    case teamConstants.DELETE_REQUEST:
       // add 'deleting:true' property to user being deleted
       return {
         ...state,
@@ -32,7 +32,7 @@ export function posts(state = {items: [], post: {}, total: 0, page: 1}, action) 
             : user
         )
       };
-    case postConstants.DELETE_SUCCESS:
+    case teamConstants.DELETE_SUCCESS:
       // remove deleted user from state
       return {
         items: state.items.filter(user => user.id !== action.id)

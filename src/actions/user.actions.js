@@ -1,6 +1,6 @@
 import { userConstants } from '../constants';
 import { userService } from '../services';
-import { actions, alertActions } from './';
+import { actions } from './';
 
 export const userActions = {
   login,
@@ -26,11 +26,11 @@ function logout() {
 
 function register(user) {
   return dispatch => {
-    dispatch(actions.request(userConstants.REGISTER_SUCCESS, {user}));
+    dispatch(actions.request(userConstants.REGISTER_REQUEST, {user}));
 
     userService.register(user)
       .then(
-        user => {
+        resp => {
           dispatch(actions.success(userConstants.REGISTER_SUCCESS, {user}));
         },
         error => {

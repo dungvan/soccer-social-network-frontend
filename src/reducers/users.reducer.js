@@ -1,7 +1,7 @@
 import { userConstants } from '../constants';
 import { isCurrentUser } from '../utils';
 
-export function users(state = {items:[], user: {}, total: 0}, action) {
+export function users(state = {items: [], user: {}, total: 0, page: 1}, action) {
   switch (action.type) {
     case userConstants.GETBY_USERNAME_REQUEST:
       return {

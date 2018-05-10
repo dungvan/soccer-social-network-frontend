@@ -1,9 +1,8 @@
 import React, { Component } from "react";
-import { Grid, InputLabel } from "material-ui";
+import { Grid } from "material-ui";
 import { connect } from "react-redux";
 import { isCurrentUser } from "utils/auth-user";
 import {
-  DatePicker,
   ProfileCard,
   RegularCard,
   Button,
@@ -11,12 +10,9 @@ import {
   ItemGrid
 } from "components";
 
-import DateFnsUtils from 'material-ui-pickers/utils/date-fns-utils';
-import MuiPickersUtilsProvider from 'material-ui-pickers/utils/MuiPickersUtilsProvider';
-
 import avatar from "assets/img/faces/marc.jpg";
 import { actions, userActions } from "../../actions";
-import { userConstants } from "../../constants/post.constants";
+import { postConstants } from "../../constants/post.constants";
 
 class UserProfile extends Component {
   constructor(props) {
@@ -36,7 +32,7 @@ class UserProfile extends Component {
       },
       password: '',
       password_confirmation: '',
-      birthdayString: '',
+      dateString: '',
       submitted: false,
       editable: false
     };
@@ -45,28 +41,15 @@ class UserProfile extends Component {
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-
-  _birthdayString(date) {
-    let birthdayString = "1990-01-01";
-    if (!!date) {
-      const day = date.getDate();
-      let dayString = day < 10 ? ("0"+day):day;
-      const month = date.getMonth()+1;
-      let monthString = month < 10 ? ("0"+month):month;
-      birthdayString = date.getFullYear()+"-"+ monthString+"-"+dayString;
-    } 
-    return birthdayString
-  }
-
   async componentWillMount(){
     try {
       await this.props.getByUsername(this.props.match.params.username).then(
         response => {
-          this.props.dispatchSuccess(userConstants.GETONE_SUCCESS, {user: response})
+          this.props.dispatchSuccess(postConstants.GETONE_SUCCESS, {user: response})
           this.setState({
             user: response,
             editable: isCurrentUser(response) || response.role === "s_admin",
-            birthdayString: this._birthdayString(response.birthday)
+            dateString: this._dateString(response.birthday)
           })
         }
       )
@@ -74,13 +57,13 @@ class UserProfile extends Component {
       if (e.bodyUsed) {
         e.data.then(
           error => {
-            this.props.dispatchFailure(userConstants.GETONE_FAILURE, error. null)
+            this.props.dispatchFailure(postConstants.GETONE_FAILURE, error, null)
           }
         )
         console.error(e)
         return
       }
-      this.props.dispatchFailure(userConstants.GETONE_FAILURE, {message: e.message, errors: null}, null)
+      this.props.dispatchFailure(postConstants.GETONE_FAILURE, {message: e.message, errors: null}, null)
       console.error(e)
     }
   }
@@ -92,7 +75,7 @@ class UserProfile extends Component {
       this.setState({[name]:value})
     }
     if (name === "birthday") {
-      this.setState({user: {...user, birthday: new Date(value)}, birthdayString: value})
+      this.setState({user: {...user, birthday: new Date(value)}, dateString: value})
     } else {
       this.setState({user: {...user, [name]:value}})
     }
@@ -109,7 +92,7 @@ class UserProfile extends Component {
   }
 
   render () {
-    const { user, editable, birthdayString, password, password_confirmation } = this.state;
+    const { user, editable, dateString, password, password_confirmation } = this.state;
     return (
       <div>
         <Grid container>
@@ -205,7 +188,7 @@ class UserProfile extends Component {
                           disabled: !editable,
                           name:"birthday",
                           type:"date",
-                          value: birthdayString,
+                          value: dateString,
                           onChange: this.handleChange
                         }}
                         formControlProps={{

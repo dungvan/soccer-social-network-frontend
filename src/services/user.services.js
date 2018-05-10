@@ -84,7 +84,7 @@ function update(user) {
     const requestOptions = {
         method: 'PUT',
         mode: 'CORS',
-        headers: { ...authHeader() },
+        headers: authHeader(),
         body: JSON.stringify(user)
     };
 

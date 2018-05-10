@@ -1,10 +1,4 @@
 // ##############################
-// // // Pickers
-// #############################
-
-import DatePicker from "./Picker/DatePicker.jsx";
-
-// ##############################
 // // // Cards
 // #############################
 
@@ -87,8 +81,6 @@ import Small from "./Typography/Small.jsx";
 import A from "./Typography/A.jsx";
 
 export {
-  // Pickers
-  DatePicker,
   // Cards
   ChartCard,
   ProfileCard,

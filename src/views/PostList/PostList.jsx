@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import {connect} from 'react-redux';
 import { NavLink } from 'react-router-dom';
 
-import {userActions} from '../../actions';
+import {postActions} from '../../actions';
 import { RegularCard, ItemGrid } from "components";
 import {
   IconButton,
@@ -49,17 +49,12 @@ export class UserList extends Component {
     this.props.getAll(this.state.page + 1)
   }
 
-  _dateString(date) {
-    let dateString = "1990-01-01";
-    if (!!date) {
-      const day = date.getDate();
-      let dayString = day < 10 ? ("0"+day):day;
-      const month = date.getMonth()+1;
-      let monthString = month < 10 ? ("0"+month):month;
-      dateString = date.getFullYear()+"-"+ monthString+"-"+dayString;
-    } 
-    return dateString
+  _dateTimeString(date) {
+    date = new Date(date)
+    let dateTimeString = date.toString().substring(0,33)
+    return dateTimeString
   }
+
 
   render () {
     const { total, items } = this.props;
@@ -76,27 +71,24 @@ export class UserList extends Component {
                   <TableHead className="primary TableHeader">
                     <TableRow>
                       <TableCell>ID</TableCell>
-                      <TableCell>Username</TableCell>
-                      <TableCell>Email</TableCell>
-                      <TableCell>Full Name</TableCell>
-                      <TableCell>Role</TableCell>
+                      <TableCell>User ID</TableCell>
+                      <TableCell>Caption</TableCell>
+                      <TableCell>Post Date</TableCell>
                       <TableCell>Action</TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {items.map((user) => {
+                    {items.map((post) => {
                       return (
-                        <TableRow key={user.id}>
-                          <TableCell>{user.id}</TableCell>
-                          <TableCell>{user.user_name}</TableCell>
-                          <TableCell>{user.email}</TableCell>
-                          <TableCell>{user.first_name + " " + user.last_name}</TableCell>
-                          <TableCell>{user.role}</TableCell>
+                        <TableRow key={post.id}>
+                          <TableCell>{post.id}</TableCell>
+                          <TableCell>{post.user_id}</TableCell>
+                          <TableCell>{
+                            post.caption.length < 37 ? post.caption : (post.caption.substring(0,26) + '...')
+                          }</TableCell>
+                          <TableCell>{this._dateTimeString(post.created_at)}</TableCell>
                           <TableCell>
-                            <NavLink to={"/admin/user/"+user.user_name}>
-                              <IconButton size="small"><Edit /></IconButton>
-                            </NavLink>
-                            <IconButton size="small" color="secondary" onClick={this.handleDelete.bind(this, user.id)}><Delete /></IconButton>
+                            <IconButton size="small" color="secondary" onClick={this.handleDelete.bind(this, post.id)}><Delete /></IconButton>
                           </TableCell>
                         </TableRow>
                       );
@@ -125,11 +117,12 @@ export class UserList extends Component {
 }
 
 function mapStateToProps(state) {
-  const { total, items } = state.users
+  const { total, items } = state.posts
   return { total, items };
 }
 
 export default connect(mapStateToProps, {
-  getAll: userActions.getAll,
-  delete: userActions.delete
+  getAll: postActions.getAll,
+  delete: postActions.delete
 })(UserList);
+

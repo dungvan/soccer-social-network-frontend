@@ -1,6 +1,5 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { Route, Redirect } from "react-router-dom";
 // creates a beautiful scrollbar
 import PerfectScrollbar from "perfect-scrollbar";
 import "perfect-scrollbar/css/perfect-scrollbar.css";
@@ -9,12 +8,10 @@ import { withStyles } from "material-ui";
 import { Header, Footer, Sidebar } from "components";
 import { AuthRoutes, authSidebar } from "routes/Auth/authRoutes.jsx"
 import { AdminRoutes, adminSidebar } from "routes/Admin/adminRoutes.jsx";
-import { isAuthenticated, isSuperAdmin, getCurrentUsername } from "utils/auth-user";
+import { isAuthenticated, isSuperAdmin } from "utils/auth-user";
 import appStyle from "assets/jss/material-dashboard-react/appStyle.jsx";
-import AuthPage from "views/Auth/Auth.jsx";
 import image from "assets/img/sidebar-2.jpg";
 import logo from "assets/img/reactlogo.png";
-import UserProfile from "../views/UserProfile/UserProfile";
 
 class App extends React.Component {
   state = {

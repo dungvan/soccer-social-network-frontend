@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { connect } from 'react-redux';
 
-import { teamActions } from '../../actions';
+import { teamActions, alertActions } from '../../actions';
 import { RegularCard, ItemGrid } from "components";
 import {
   IconButton,
@@ -17,9 +17,13 @@ import {
 import {
   Delete,
 } from '@material-ui/icons';
-
+import { withSwalInstance } from 'sweetalert2-react';
+import swal from 'sweetalert2';
 import "assets/jss/material-dashboard-react/tableStyle";
 import { TablePagination } from "material-ui";
+import { alertConstants } from "../../constants";
+
+const SweetAlert = withSwalInstance(swal);
 
 export class TeamList extends Component {
 
@@ -51,6 +55,18 @@ export class TeamList extends Component {
     const { page } = this.state;
     return (
       <Grid container>
+        <SweetAlert
+          show={alert.warning}
+          title='Are you sure?'
+          text="You won't be able to revert this!"
+          type='warning'
+          showCancelButton={true}
+          confirmButtonColor='#3085d6'
+          cancelButtonColor='#d33'
+          confirmButtonText='Yes, delete it!'
+          onConfirm={this._confirmDelete}
+          onCancel={() => {this.props.dispathAlertClear(alertConstants.WARNING_CLEAR)}}
+        />
         <ItemGrid xs={12} sm={12} md={12}>
           <RegularCard
             cardTitle="Simple Table"
@@ -113,5 +129,7 @@ function mapStateToProps(state) {
 
 export default connect(mapStateToProps, {
   getAll: teamActions.getAll,
-  delete: teamActions.delete
+  delete: teamActions.delete,
+  dispathAlertWarning: alertActions.warning,
+  dispathAlertClear: alertActions.clear
 })(TeamList);

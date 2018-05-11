@@ -46,6 +46,7 @@ class UserProfile extends Component {
   _dateString(date) {
     let dateString = "1990-01-01";
     if (!!date) {
+      date = new Date(date)
       const day = date.getDate();
       let dayString = day < 10 ? ("0"+day):day;
       const month = date.getMonth()+1;

@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { connect } from 'react-redux';
 import { NavLink } from 'react-router-dom';
 
-import {userActions} from '../../actions';
+import { userActions, alertActions } from '../../actions';
 import { RegularCard, ItemGrid } from "components";
 import {
   IconButton,
@@ -12,16 +12,20 @@ import {
   TableRow,
   TableBody,
   TableCell,
-  TableFooter
+  TableFooter,
+  TablePagination
 } from "material-ui";
 
 import {
   Delete,
   Edit
 } from '@material-ui/icons';
-
+import { withSwalInstance } from 'sweetalert2-react';
+import swal from 'sweetalert2';
 import "assets/jss/material-dashboard-react/tableStyle";
-import { TablePagination } from "material-ui";
+import { alertConstants } from "../../constants";
+
+const SweetAlert = withSwalInstance(swal);
 
 export class UserList extends Component {
 
@@ -30,8 +34,11 @@ export class UserList extends Component {
     this.State = { page: 1}
   }
 
+  delID;
+
   handleDelete = id => {
-    this.props.delete(id)
+    this.props.dispathAlertWarning("Are you sure?")
+    this.delID = id
   }
 
   handleChangePage = (event, page) => {
@@ -60,11 +67,30 @@ export class UserList extends Component {
     return dateString
   }
 
+  _confirmDelete = ()=> {
+    if (!!this.delID) {
+      this.props.delete(this.delID);
+      this.props.dispathAlertClear(alertConstants.WARNING_CLEAR)
+    }
+  }
+
   render () {
-    const { total, items } = this.props;
+    const { total, items, alert } = this.props;
     const { page } = this.state;
     return (
       <Grid container>
+        <SweetAlert
+          show={alert.warning}
+          title='Are you sure?'
+          text="You won't be able to revert this!"
+          type='warning'
+          showCancelButton={true}
+          confirmButtonColor='#3085d6'
+          cancelButtonColor='#d33'
+          confirmButtonText='Yes, delete it!'
+          onConfirm={this._confirmDelete}
+          onCancel={() => {this.props.dispathAlertClear(alertConstants.WARNING_CLEAR)}}
+        />
         <ItemGrid xs={12} sm={12} md={12}>
           <RegularCard
             cardTitle="Simple Table"
@@ -125,10 +151,13 @@ export class UserList extends Component {
 
 function mapStateToProps(state) {
   const { total, items } = state.users
-  return { total, items };
+  const { alert } = state
+  return { total, items, alert };
 }
 
 export default connect(mapStateToProps, {
   getAll: userActions.getAll,
-  delete: userActions.delete
+  delete: userActions.delete,
+  dispathAlertWarning: alertActions.warning,
+  dispathAlertClear: alertActions.clear
 })(UserList);

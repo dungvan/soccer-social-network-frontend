@@ -35,6 +35,7 @@ export function posts(state = {items: [], post: {}, total: 0, page: 1}, action) 
     case postConstants.DELETE_SUCCESS:
       // remove deleted user from state
       return {
+        ...state,
         items: state.items.filter(user => user.id !== action.id)
       };
     default:

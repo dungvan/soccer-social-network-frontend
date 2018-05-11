@@ -8,7 +8,9 @@ import { Switch, Route } from "react-router-dom";
 
 import {
   Person,
-  ContentPaste
+  ContentPaste,
+  Group,
+  Pageview
 } from "@material-ui/icons";
 import { getCurrentUsername } from "../../utils";
 
@@ -35,7 +37,19 @@ const adminSidebar = [
     path: "/admin/users",
     sidebarName: "User List",
     icon: ContentPaste,
-    navbarName: "UserList"
+    navbarName: "User List"
+  },
+  {
+    path: "/admin/posts",
+    sidebarName: "Post List",
+    icon: Pageview,
+    navbarName: "Post List"
+  },
+  {
+    path: "/admin/teams",
+    sidebarName: "Team List",
+    icon: Group,
+    navbarName: "Team List"
   }
 ]
 

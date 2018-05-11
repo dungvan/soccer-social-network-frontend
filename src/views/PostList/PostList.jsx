@@ -94,7 +94,7 @@ export class PostList extends Component {
                   <TableHead className="primary TableHeader">
                     <TableRow>
                       <TableCell>ID</TableCell>
-                      <TableCell>User ID</TableCell>
+                      <TableCell>User Name</TableCell>
                       <TableCell>Caption</TableCell>
                       <TableCell>Post Date</TableCell>
                       <TableCell>Action</TableCell>
@@ -105,7 +105,7 @@ export class PostList extends Component {
                       return (
                         <TableRow key={post.id}>
                           <TableCell>{post.id}</TableCell>
-                          <TableCell>{post.user_id}</TableCell>
+                          <TableCell>{post.user.user_name}</TableCell>
                           <TableCell>{
                             post.caption.length < 37 ? post.caption : (post.caption.substring(0,26) + '...')
                           }</TableCell>

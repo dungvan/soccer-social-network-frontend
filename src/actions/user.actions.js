@@ -27,16 +27,15 @@ function logout() {
 function register(user) {
   return dispatch => {
     dispatch(actions.request(userConstants.REGISTER_REQUEST, {user}));
-
     userService.register(user)
       .then(
         resp => {
           dispatch(actions.success(userConstants.REGISTER_SUCCESS, {user}));
-          console.log(resp)
           dispatch(alertActions.success(resp))
         },
         error => {
           console.log(error)
+          dispatch(alertActions.error("some thing wen't wrong!"))
           if (error.bodyUsed) {
             error.data.then(error => {
               dispatch(actions.failure(userConstants.REGISTER_FAILURE, error, null));
@@ -58,6 +57,7 @@ function getAll(page) {
         data => dispatch(actions.success(userConstants.GETALL_SUCCESS, data)),
         error => {
           console.log(error)
+          dispatch(alertActions.error("some thing wen't wrong!"))
           if (error.bodyUsed) {
             error.data.then(error => {
               dispatch(actions.failure(userConstants.GETALL_FAILURE, error, null));
@@ -79,12 +79,16 @@ function getByUsername(username) {
 
 function update(user) {
   return dispatch => {
-    dispatch(actions.request(userConstants.UPDATE_REQUEST, {user}))
+    dispatch(actions.request(userConstants.UPDATE_REQUEST, {user}));
     userService.update(user)
       .then(
-        user => dispatch(actions.success(userConstants.UPDATE_SUCCESS, {user})),
+        user => {
+          dispatch(actions.success(userConstants.UPDATE_SUCCESS, {user}));
+          dispatch(alertActions.success(user));
+        },
         error => {
           console.log(error)
+          dispatch(alertActions.error("some thing wen't wrong!"))
           if (error.bodyUsed) {
             error.data.then(error => {
               dispatch(actions.failure(userConstants.UPDATE_FAILURE, error, {user}));

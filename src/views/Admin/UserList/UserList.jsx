@@ -1,7 +1,8 @@
 import React, { Component } from "react";
 import { connect } from 'react-redux';
+import { NavLink } from 'react-router-dom';
 
-import { teamActions, alertActions } from '../../actions';
+import { userActions, alertActions } from 'actions';
 import { RegularCard, ItemGrid } from "components";
 import {
   IconButton,
@@ -11,29 +12,33 @@ import {
   TableRow,
   TableBody,
   TableCell,
-  TableFooter
+  TableFooter,
+  TablePagination
 } from "material-ui";
 
 import {
   Delete,
+  Edit
 } from '@material-ui/icons';
 import { withSwalInstance } from 'sweetalert2-react';
 import swal from 'sweetalert2';
 import "assets/jss/material-dashboard-react/tableStyle";
-import { TablePagination } from "material-ui";
-import { alertConstants } from "../../constants";
+import { alertConstants } from "../../../constants";
 
 const SweetAlert = withSwalInstance(swal);
 
-export class TeamList extends Component {
+export class UserList extends Component {
 
   constructor(props) {
     super(props)
     this.State = { page: 1}
   }
 
+  delID;
+
   handleDelete = id => {
-    this.props.delete(id)
+    this.props.dispathAlertWarning("Are you sure?")
+    this.delID = id
   }
 
   handleChangePage = (event, page) => {
@@ -50,8 +55,27 @@ export class TeamList extends Component {
     this.props.getAll(this.state.page + 1)
   }
 
+  _dateString(date) {
+    let dateString = "1990-01-01";
+    if (!!date) {
+      const day = date.getDate();
+      let dayString = day < 10 ? ("0"+day):day;
+      const month = date.getMonth()+1;
+      let monthString = month < 10 ? ("0"+month):month;
+      dateString = date.getFullYear()+"-"+ monthString+"-"+dayString;
+    } 
+    return dateString
+  }
+
+  _confirmDelete = ()=> {
+    if (!!this.delID) {
+      this.props.delete(this.delID);
+      this.props.dispathAlertClear(alertConstants.WARNING_CLEAR)
+    }
+  }
+
   render () {
-    const { total, items } = this.props;
+    const { total, items, alert } = this.props;
     const { page } = this.state;
     return (
       <Grid container>
@@ -77,24 +101,27 @@ export class TeamList extends Component {
                   <TableHead className="primary TableHeader">
                     <TableRow>
                       <TableCell>ID</TableCell>
-                      <TableCell>User ID</TableCell>
-                      <TableCell>Caption</TableCell>
+                      <TableCell>Username</TableCell>
+                      <TableCell>Email</TableCell>
+                      <TableCell>Full Name</TableCell>
+                      <TableCell>Role</TableCell>
                       <TableCell>Action</TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {items.map((team) => {
+                    {items.map((user) => {
                       return (
-                        <TableRow key={team.id}>
-                          <TableCell>{team.id}</TableCell>
-                          <TableCell>{team.name}</TableCell>
-                          <TableCell>{!!team.master.first_name&&!!team.master.lastname ? team.master.first_name + " " + team.master.last_name:team.master.username}</TableCell>
-                          <TableCell>{
-                            team.description.length() > 37 ? team.description.substring(0, 37) + "..." : team.description 
-                          }
-                          </TableCell>
+                        <TableRow key={user.id}>
+                          <TableCell>{user.id}</TableCell>
+                          <TableCell>{user.user_name}</TableCell>
+                          <TableCell>{user.email}</TableCell>
+                          <TableCell>{user.first_name + " " + user.last_name}</TableCell>
+                          <TableCell>{user.role}</TableCell>
                           <TableCell>
-                            <IconButton size="small" color="secondary" onClick={this.handleDelete.bind(this, team.id)}><Delete /></IconButton>
+                            <NavLink to={"/admin/user/"+user.user_name}>
+                              <IconButton size="small"><Edit /></IconButton>
+                            </NavLink>
+                            <IconButton size="small" color="secondary" onClick={this.handleDelete.bind(this, user.id)}><Delete /></IconButton>
                           </TableCell>
                         </TableRow>
                       );
@@ -123,13 +150,14 @@ export class TeamList extends Component {
 }
 
 function mapStateToProps(state) {
-  const { total, items } = state.teams
-  return { total, items };
+  const { total, items } = state.users
+  const { alert } = state
+  return { total, items, alert };
 }
 
 export default connect(mapStateToProps, {
-  getAll: teamActions.getAll,
-  delete: teamActions.delete,
+  getAll: userActions.getAll,
+  delete: userActions.delete,
   dispathAlertWarning: alertActions.warning,
   dispathAlertClear: alertActions.clear
-})(TeamList);
+})(UserList);

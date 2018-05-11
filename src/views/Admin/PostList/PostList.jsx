@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { connect } from 'react-redux';
 
-import { postActions, alertActions } from '../../actions';
+import { postActions, alertActions } from 'actions';
 import { RegularCard, ItemGrid } from "components";
 import {
   IconButton,
@@ -22,7 +22,7 @@ import { withSwalInstance } from 'sweetalert2-react';
 import swal from 'sweetalert2';
 
 import "assets/jss/material-dashboard-react/tableStyle";
-import { alertConstants } from "../../constants";
+import { alertConstants } from "../../../constants";
 
 const SweetAlert = withSwalInstance(swal);
 

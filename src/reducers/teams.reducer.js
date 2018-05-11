@@ -26,16 +26,16 @@ export function teams(state = {items: [], team: {master: {}, players: [], descri
       // add 'deleting:true' property to user being deleted
       return {
         ...state,
-        items: state.items.map(user =>
-          user.id === action.id
-            ? { ...user, deleting: true }
-            : user
+        items: state.items.map(team =>
+          team.id === action.id
+            ? { ...team, deleting: true }
+            : team
         )
       };
     case teamConstants.DELETE_SUCCESS:
       // remove deleted user from state
       return {
-        items: state.items.filter(user => user.id !== action.id)
+        items: state.items.filter(team => team.id !== action.id)
       };
     default:
       return state;

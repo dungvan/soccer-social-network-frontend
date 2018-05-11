@@ -41,7 +41,7 @@ function getAll(page) {
       .then(
         data => dispatch(actions.success(teamConstants.GETALL_SUCCESS, data)),
         error => {
-          console.log(error)
+          console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaaa", error)
           if (error.bodyUsed) {
             error.data.then(error => {
               dispatch(actions.failure(teamConstants.GETALL_FAILURE, error, null));

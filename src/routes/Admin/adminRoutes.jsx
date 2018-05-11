@@ -1,9 +1,9 @@
 import React from "react";
 import DashboardPage from "views/Dashboard/Dashboard.jsx";
-import UserProfile from "views/UserProfile/UserProfile.jsx";
-import UserList from "views/UserList/UserList.jsx";
-import PostList from "views/PostList/PostList";
-import TeamList from "views/TeamList/TeamList";
+import UserProfile from "views/Admin/UserProfile/UserProfile.jsx";
+import UserList from "views/Admin/UserList/UserList.jsx";
+import PostList from "views/Admin/PostList/PostList";
+import TeamList from "views/Admin/TeamList/TeamList";
 import { Switch, Route } from "react-router-dom";
 
 import {

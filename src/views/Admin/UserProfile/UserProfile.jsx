@@ -11,9 +11,9 @@ import {
 } from "components";
 
 import avatar from "assets/img/faces/marc.jpg";
-import { actions, userActions } from "../../actions";
-import { postConstants } from "../../constants/post.constants";
-import { isSuperAdmin } from "../../utils";
+import { actions, userActions } from "actions";
+import { postConstants } from "../../../constants/post.constants";
+import { isSuperAdmin } from "utils";
 
 class UserProfile extends Component {
   constructor(props) {

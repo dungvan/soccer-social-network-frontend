@@ -12,7 +12,7 @@ import {
 
 import avatar from "assets/img/faces/marc.jpg";
 import { actions, userActions } from "actions";
-import { postConstants } from "../../../constants/post.constants";
+import { userConstants } from "../../../constants";
 import { isSuperAdmin } from "utils";
 
 class UserProfile extends Component {
@@ -60,7 +60,7 @@ class UserProfile extends Component {
     try {
       await this.props.getByUsername(this.props.match.params.username).then(
         response => {
-          this.props.dispatchSuccess(postConstants.GETONE_SUCCESS, {user: response})
+          this.props.dispatchSuccess(userConstants.GETBY_USERNAME_SUCCESS, {user: response})
           this.setState({
             user: response,
             editable: isCurrentUser(response) || isSuperAdmin(),
@@ -72,13 +72,13 @@ class UserProfile extends Component {
       if (e.bodyUsed) {
         e.data.then(
           error => {
-            this.props.dispatchFailure(postConstants.GETONE_FAILURE, error, null)
+            this.props.dispatchFailure(userConstants.GETBY_USERNAME_FAILURE, error, null)
           }
         )
         console.error(e)
         return
       }
-      this.props.dispatchFailure(postConstants.GETONE_FAILURE, {message: e.message, errors: null}, null)
+      this.props.dispatchFailure(userConstants.GETBY_USERNAME_FAILURE, {message: e.message, errors: null}, null)
       console.error(e)
     }
   }

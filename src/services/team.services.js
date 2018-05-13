@@ -58,7 +58,7 @@ function update(team) {
         body: JSON.stringify(team)
     }
 
-    return fetch('http://localhost/teams', requestOptions).then(handleResponse);
+    return fetch('http://localhost/teams/'+team.id, requestOptions).then(handleResponse);
 }
 
 function _delete(id) {

@@ -68,7 +68,7 @@ export class PostList extends Component {
   }
 
   render () {
-    const { total, items } = this.props;
+    const { total, items, alert } = this.props;
     const { page } = this.state;
     return (
       <Grid container>
@@ -140,8 +140,9 @@ export class PostList extends Component {
 }
 
 function mapStateToProps(state) {
-  const { total, items } = state.posts
-  return { total, items };
+  const { total, items } = state.posts;
+  const { alert } = state ;
+  return { total, items, alert };
 }
 
 export default connect(mapStateToProps, {

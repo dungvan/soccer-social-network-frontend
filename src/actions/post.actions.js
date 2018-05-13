@@ -5,7 +5,8 @@ import { actions } from './';
 export const postActions = {
   create,
   getAll,
-  getByUserID,
+  getByUser,
+  getOne,
   update,
   delete: _delete
 };
@@ -14,7 +15,7 @@ function create(post) {
   return dispatch => {
     dispatch(actions.request(postConstants.CREATE_REQUEST, {post}));
 
-    postService.register(post)
+    postService.create(post)
       .then(
         resp => {
           dispatch(actions.success(postConstants.CREATE_SUCCESS, {post}));
@@ -54,10 +55,30 @@ function getAll(page) {
   };
 }
 
-function getByUserID(id) {
+function getByUser(id) {
   return dispatch => {
     dispatch(actions.request(postConstants.GETBY_USERID_REQUEST, {user_id: id}));
-    return postService.getByUserName(id)
+    postService.getByUser(id)
+    .then(
+      data => dispatch(actions.success(postConstants.GETBY_USERID_SUCCESS, data)),
+      error => {
+        console.log(error)
+        if (error.bodyUsed) {
+          error.data.then(error => {
+            dispatch(actions.failure(postConstants.GETBY_USERID_FAILURE, error, null));
+          });
+        } else {
+          dispatch(actions.failure(postConstants.GETBY_USERID_FAILURE, {message: error.message, errors: null}, null));
+        }
+      }
+    );
+  }
+}
+
+function getOne(id){
+  return dispath => {
+    dispath(actions.request(postConstants.GETONE_REQUEST, {id}))
+    return postService.getOne(id)
   }
 }
 

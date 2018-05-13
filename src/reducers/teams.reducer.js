@@ -35,7 +35,23 @@ export function teams(state = {items: [], team: {master: {}, players: [], descri
     case teamConstants.DELETE_SUCCESS:
       // remove deleted user from state
       return {
+        ...state,
+        total: state.total -1,
         items: state.items.filter(team => team.id !== action.id)
+      };
+    case teamConstants.DELETE_FAILURE:
+      // remove 'deleting:true' property and add 'deleteError:[error]' property to user 
+      return {
+        ...state,
+        items: state.items.map(team => {
+          if (team.id === action.data.id) {
+            // make copy of user without 'deleting:true' property
+            const { deleting, ...teamCopy } = team;
+            // return copy of user with 'deleteError:[error]' property
+            return { ...teamCopy, deleteError: action.error };
+          }
+          return team;
+        })
       };
     default:
       return state;

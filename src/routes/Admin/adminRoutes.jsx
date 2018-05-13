@@ -2,8 +2,10 @@ import React from "react";
 import DashboardPage from "views/Dashboard/Dashboard.jsx";
 import UserProfile from "views/Admin/UserProfile/UserProfile.jsx";
 import UserList from "views/Admin/UserList/UserList.jsx";
-import PostList from "views/Admin/PostList/PostList";
-import TeamList from "views/Admin/TeamList/TeamList";
+import PostList from "views/Admin/PostList/PostList.jsx";
+import TeamList from "views/Admin/TeamList/TeamList.jsx";
+import PostExplore from "views/PostExplore/PostExplore";
+import PostDetail from "views/PostDetail/PostDetail";
 import { Switch, Route } from "react-router-dom";
 
 import {
@@ -12,7 +14,7 @@ import {
   Group,
   Pageview
 } from "@material-ui/icons";
-import { getCurrentUsername } from "../../utils";
+import { getCurrentUsername } from "utils";
 
 const AdminRoutes = () => {
   return (
@@ -22,6 +24,11 @@ const AdminRoutes = () => {
       <Route path="/admin/users" component={UserList} />
       <Route path="/admin/posts" component={PostList} />
       <Route path="/admin/teams" component={TeamList} />
+
+
+
+      <Route path="/posts" component={PostExplore} />
+      <Route path="/post/:id" component={PostDetail} />
     </Switch>
   );
 }

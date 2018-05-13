@@ -52,6 +52,7 @@ class App extends React.Component {
           type='error'
           title='Oops...'
           text='Something went wrong!'
+          onComfirm={()=> { this.props.dispathAlertClear(alertConstants.SUCCESS_CLEAR)}}
           onClose={()=> this.props.dispathAlertClear(alertConstants.ERROR_CLEAR)}
         />
         <Sidebar

@@ -14,7 +14,7 @@ function create(team) {
   return dispatch => {
     dispatch(actions.request(teamConstants.CREATE_REQUEST, {team}));
 
-    teamService.register(team)
+    teamService.create(team)
       .then(
         resp => {
           dispatch(actions.success(teamConstants.CREATE_SUCCESS, {team}));
@@ -41,7 +41,7 @@ function getAll(page) {
       .then(
         data => dispatch(actions.success(teamConstants.GETALL_SUCCESS, data)),
         error => {
-          console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaaa", error)
+          console.log(error)
           if (error.bodyUsed) {
             error.data.then(error => {
               dispatch(actions.failure(teamConstants.GETALL_FAILURE, error, null));

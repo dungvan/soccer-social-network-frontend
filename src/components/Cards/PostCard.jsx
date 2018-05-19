@@ -17,6 +17,7 @@ import {
   ExpandMore,
   MoreVert
 } from '@material-ui/icons';
+import { postService } from '../../services';
 
 const styles = theme => ({
   postCard: {
@@ -108,7 +109,9 @@ class PostCard extends React.Component {
   };
 
   handleStarClick = () => {
-    const newStarCount = this.state.star ? () => {this.currStarCount--; return this.currStarCount} : () => {this.currStarCount++; return this.currStarCount} ;
+    const newStarCount = this.state.star ? () => {this.currStarCount--; let id = this.props.postID;
+      postService.downStar({id}) ; return this.currStarCount} : () => {this.currStarCount++;let id = this.props.postID;
+        postService.upStar({id})  ;return this.currStarCount} ;
     this.setState({ star: !this.state.star, starCount: newStarCount() });
   };
 

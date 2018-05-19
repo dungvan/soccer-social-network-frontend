@@ -19,12 +19,14 @@ import { isAuthenticated } from "../../utils";
 function Header({ ...props }) {
   function makeBrand() {
     var name = "";
+    if (!!props.routes) {
     props.routes.map((prop, key) => {
       if (prop.path === props.location.pathname) {
         name = prop.navbarName;
       }
       return null;
     });
+  }
     return name;
   }
   const { classes, color } = props;

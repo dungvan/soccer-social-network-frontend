@@ -3,6 +3,8 @@ import { authHeader } from '../utils';
 export const postService = {
     getAll,
     getByUser,
+    upStar,
+    downStar,
     getOne,
     create,
     update,
@@ -59,6 +61,28 @@ function update(post) {
     }
 
     return fetch('http://localhost/posts', requestOptions).then(handleResponse);
+}
+
+function upStar(post) {
+    const requestOptions = {
+        method: 'POST',
+        mode: 'CORS',
+        headers: authHeader(),
+        body: JSON.stringify(post)
+    }
+
+    return fetch('http://localhost/posts/'+post.id+'/star', requestOptions).then(handleResponse);
+}
+
+function downStar(post) {
+    const requestOptions = {
+        method: 'DELETE',
+        mode: 'CORS',
+        headers: authHeader(),
+        body: JSON.stringify(post)
+    }
+
+    return fetch('http://localhost/posts/'+post.id+'/star', requestOptions).then(handleResponse);
 }
 
 function _delete(id) {

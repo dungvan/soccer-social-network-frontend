@@ -24,7 +24,7 @@ const Sidebar = ({ ...props }) => {
   const { classes, color, logo, image, logoText, routes } = props;
   var links = (
     <List className={classes.list}>
-      {routes.map((prop, key) => {
+      {!!routes && routes.map((prop, key) => {
         const listItemClasses = cx({
           [" " + classes[color]]: activeRoute(prop.path)
         });

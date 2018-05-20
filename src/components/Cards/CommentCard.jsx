@@ -7,9 +7,12 @@ import IconButton from 'material-ui/IconButton';
 import Typography from 'material-ui/Typography';
 import red from 'material-ui/colors/red';
 import {
-  Close
+  Close,
+  Star,
+  StarBorder
 } from '@material-ui/icons';
 import { isCurrentUser } from 'utils';
+import { commentService } from 'services';
 
 const styles = theme => {
   return {
@@ -71,8 +74,33 @@ const styles = theme => {
 }
 
 class CommentCard extends Component {
+
+  state={star: !!this.props.comment.star_flag, starCount: this.props.comment.star_count, deleted: false}
+  currStarCount = this.props.comment.star_count
+  handleStarClick = () => {
+    const newStarCount = this.state.star ? () => {
+      this.currStarCount--;
+      let id = this.props.comment.id;
+      commentService.downStar({post_id:this.props.comment.post_id,id}) ; return this.currStarCount
+    } : () => {
+      this.currStarCount++;
+      let id = this.props.comment.id;
+      commentService.upStar({post_id:this.props.comment.post_id,id})  ;return this.currStarCount
+    };
+    this.setState({ star: !this.state.star, starCount: newStarCount() });
+  };
+  handleDelete = () => {
+    let id = this.props.comment.id;
+    commentService.delete({post_id:this.props.comment.post_id,id})
+    this.setState({deleted: true})
+  }
+
   render () {
     const { classes, comment } = this.props;
+    const { deleted, star, starCount } = this.state;
+    if (deleted) {
+      return null;
+    }
     return (
       <div className={classes.cardComment}>
         <Avatar
@@ -88,12 +116,17 @@ class CommentCard extends Component {
             >
               <span style={{fontSize:14, fontWeight: 'bold', color: '#365899'}}><a>{comment.user.user_name}</a> </span>{comment.content}
             </Typography>
-            { isCurrentUser(comment.user) && <IconButton style={{display:'flex', width:24, height:24, marginTop:14}} aria-label="close" onClick={this.handleClose}>
+            <IconButton style={{display:'flex', width:24, height:24, marginTop:14}} aria-label="close" onClick={this.handleStarClick}>
+            {!!star ? <Star style={{color:'#efbf10'}} /> : <StarBorder style={{color:'#efbf10'}} />}
+            </IconButton>
+            <IconButton style={{display:'flex', width:24, height:24, marginTop:14}} aria-label="close" onClick={this.handleDelete}>
+            { isCurrentUser(comment.user) &&
               <Close style={{width:16, height:16}} />
-            </IconButton>}
+            }  
+            </IconButton>
           </div>
           <div style={{marginLeft:27, lineHeight:'12px', marginBottom:2, marginTop:-3}}>
-            <div className={classes.favLink}><a >{comment.star_count + " Favorite"}</a>,   <span>{new Date(comment.created_at).toLocaleString()}</span></div>
+            <div className={classes.favLink}><a >{starCount + " Favorite"}</a>,   <span>{new Date(comment.created_at).toLocaleString()}</span></div>
           </div>
         </div>
       </div>

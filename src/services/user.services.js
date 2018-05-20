@@ -1,4 +1,5 @@
 import { authHeader } from '../utils';
+import env from 'env';
 
 export const userService = {
     login,
@@ -24,7 +25,7 @@ function register(user) {
             password_confirmation: user.passwordConfirmation})
     };
 
-    return fetch('http://localhost/users/register', requestOptions).then(handleResponse);
+    return fetch(env.url+'/users/register', requestOptions).then(handleResponse);
 }
 
 
@@ -36,7 +37,7 @@ function login(username, password) {
         body: JSON.stringify({ user_name_or_email: username, password: password })
     };
 
-    return fetch('http://localhost/users/login', requestOptions)
+    return fetch(env.url+'/users/login', requestOptions)
         .then(response => {
             if (response.status !== 200) {
                 if (response.status === 400) {
@@ -68,7 +69,7 @@ function getAll(page) {
         headers: authHeader()
     };
 
-    return fetch('http://localhost/users?page=' + page, requestOptions).then(handleResponse);
+    return fetch(env.url+'/users?page=' + page, requestOptions).then(handleResponse);
 }
 
 function getByUserName(username) {
@@ -77,7 +78,7 @@ function getByUserName(username) {
         headers: authHeader()
     };
 
-    return fetch('http://localhost/users/' + username, requestOptions).then(handleResponse);
+    return fetch(env.url+'/users/' + username, requestOptions).then(handleResponse);
 }
 
 function update(user) {
@@ -88,7 +89,7 @@ function update(user) {
         body: JSON.stringify(user)
     };
 
-    return fetch('http://localhost/users/' + user.id, requestOptions).then(handleResponse);
+    return fetch(env.url+'/users/' + user.id, requestOptions).then(handleResponse);
 }
 
 // prefixed function name with underscore because delete is a reserved word in javascript
@@ -98,7 +99,7 @@ function _delete(id) {
         headers: authHeader()
     };
 
-    return fetch('http://localhost/users/' + id, requestOptions).then(handleResponse);
+    return fetch(env.url+'/users/' + id, requestOptions).then(handleResponse);
 }
 
 function handleResponse(response) {

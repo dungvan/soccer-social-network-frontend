@@ -1,6 +1,6 @@
 import React from "react";
 import DashboardPage from "views/Dashboard/Dashboard.jsx";
-import UserProfile from "views/Admin/UserProfile/UserProfile.jsx";
+import UserProfile from "views/UserProfile/UserProfile.jsx";
 import UserList from "views/Admin/UserList/UserList.jsx";
 import PostList from "views/Admin/PostList/PostList.jsx";
 import TeamList from "views/Admin/TeamList/TeamList.jsx";
@@ -12,30 +12,30 @@ import {
   Person,
   ContentPaste,
   Group,
-  Pageview
+  Pageview,
+  PowerSettingsNew
 } from "@material-ui/icons";
 import { getCurrentUsername } from "utils";
+import Logout from "../../views/Auth/Logout/Logout";
 
 const AdminRoutes = () => {
   return (
     <Switch>
       <Route exact path="/admin" component={DashboardPage} />
-      <Route path="/admin/user/:username" component={UserProfile} />
+      <Route path="/user/:username" component={UserProfile} />
       <Route path="/admin/users" component={UserList} />
       <Route path="/admin/posts" component={PostList} />
       <Route path="/admin/teams" component={TeamList} />
-
-
-
-      <Route path="/posts" component={PostExplore} />
+      <Route exact path="/" component={PostExplore} />
       <Route path="/post/:id" component={PostDetail} />
+      <Route path="/logout" component={Logout} />
     </Switch>
   );
 }
 
 const adminSidebar = [
   {
-    path: "/admin/user/" + getCurrentUsername(),
+    path: "/user/" + getCurrentUsername(),
     sidebarName: "User Profile",
     icon: Person,
     navbarName: "User Profile"
@@ -57,6 +57,12 @@ const adminSidebar = [
     sidebarName: "Team List",
     icon: Group,
     navbarName: "Team List"
+  },
+  {
+    path: "/logout",
+    sidebarName: "Logout",
+    icon: PowerSettingsNew,
+    navbarName: ""
   }
 ]
 

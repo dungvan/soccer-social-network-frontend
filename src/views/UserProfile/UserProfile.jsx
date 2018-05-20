@@ -11,9 +11,12 @@ import {
 } from "components";
 
 import avatar from "assets/img/faces/marc.jpg";
-import { actions, userActions } from "actions";
-import { userConstants } from "../../../constants";
-import { isSuperAdmin } from "utils";
+import { actions, userActions, alertActions } from "actions";
+import { userConstants, alertConstants } from "../../constants";
+import { withSwalInstance } from 'sweetalert2-react';
+import swal from 'sweetalert2'
+
+const SweetAlert = withSwalInstance(swal);
 
 class UserProfile extends Component {
   constructor(props) {
@@ -63,7 +66,7 @@ class UserProfile extends Component {
           this.props.dispatchSuccess(userConstants.GETBY_USERNAME_SUCCESS, {user: response})
           this.setState({
             user: response,
-            editable: isCurrentUser(response) || isSuperAdmin(),
+            editable: isCurrentUser(response),
             dateString: this._dateString(response.birthday)
           })
         }
@@ -108,8 +111,25 @@ class UserProfile extends Component {
 
   render () {
     const { user, editable, dateString, password, password_confirmation } = this.state;
+    const { alert } = this.props;
     return (
       <div>
+      <SweetAlert
+          show={alert.success}
+          type='success'
+          title='Your work has been saved'
+          showConfirmButton={true}
+          onClose={()=> {this.props.dispathAlertClear(alertConstants.SUCCESS_CLEAR)}}
+          onConfirm={()=> {this.props.dispathAlertClear(alertConstants.SUCCESS_CLEAR)}}
+        />
+        <SweetAlert
+          show={alert.error}
+          type='error'
+          title='Oops...'
+          text='Something went wrong!'
+          onConfirm={()=> { this.props.dispathAlertClear(alertConstants.ERROR_CLEAR)}}
+          onClose={()=> this.props.dispathAlertClear(alertConstants.ERROR_CLEAR)}
+        />
         <Grid container>
           <ItemGrid xs={12} sm={12} md={8}>
             <RegularCard
@@ -324,7 +344,7 @@ class UserProfile extends Component {
                   </Grid>
                 </div>
               }
-              footer={<Button color="primary" onClick={this.handleSubmit} >Update Profile</Button>}
+              footer={editable && <Button color="primary" onClick={this.handleSubmit} >Update Profile</Button>}
             />
           </ItemGrid>
           <ItemGrid xs={12} sm={12} md={4}>
@@ -334,6 +354,7 @@ class UserProfile extends Component {
               title={(!!user.first_name || !!user.last_name)?(user.first_name + " " + user.last_name):user.user_name}
               description={user.quote}
               footer={
+                !editable &&
                 <Button color="primary" round>
                   Follow
                 </Button>
@@ -347,13 +368,16 @@ class UserProfile extends Component {
 }
 
 const mapStateToProps = (state) => {
-  const { loading } = state.users
-  return { loading }
+  const { loading } = state.users;
+  const { alert } = state;
+  return { loading, alert }
 }
 
 export default connect(mapStateToProps, {
   update: userActions.update,
   getByUsername: userActions.getByUsername,
   dispatchSuccess: actions.success,
-  dispatchFailure: actions.failure
+  dispatchFailure: actions.failure,
+  deleteUser: userActions.delete,
+  dispathAlertClear: alertActions.clear
 })(UserProfile);

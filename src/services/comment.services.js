@@ -1,10 +1,33 @@
 import { authHeader } from '../utils';
+import env from 'env';
 
 export const commentService = {
     create,
     update,
+    upStar,
+    downStar,
     delete: _delete
 };
+
+function upStar(comment) {
+    const requestOptions = {
+        method: 'POST',
+        mode: 'CORS',
+        headers: authHeader()
+    }
+
+    return fetch(env.url+'/posts/'+comment.post_id+'/comments/'+comment.id+'/star', requestOptions).then(handleResponse);
+}
+
+function downStar(comment) {
+    const requestOptions = {
+        method: 'DELETE',
+        mode: 'CORS',
+        headers: authHeader()
+    }
+
+    return fetch(env.url+'/posts/'+comment.post_id+'/comments/'+comment.id+'/star', requestOptions).then(handleResponse);
+}
 
 function create(comment) {
     const requestOptions = {
@@ -25,7 +48,7 @@ function update(comment) {
         body: JSON.stringify({content : comment.content})
     }
 
-    return fetch('http://localhost/posts/'+comment.post_id+'/comments/'+comment.id, requestOptions).then(handleResponse);
+    return fetch(env.url+'/posts/'+comment.post_id+'/comments/'+comment.id, requestOptions).then(handleResponse);
 }
 
 function _delete(comment) {
@@ -35,7 +58,7 @@ function _delete(comment) {
         headers: authHeader()
     }
 
-    return fetch('http://localhost/posts/'+comment.post_id+'/comments/' + comment.id, requestOptions).then(handleResponse);
+    return fetch(env.url+'/posts/'+comment.post_id+'/comments/' + comment.id, requestOptions).then(handleResponse);
 }
 
 function handleResponse(response) {

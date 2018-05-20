@@ -8,6 +8,7 @@ import Collapse from 'material-ui/transitions/Collapse';
 import Avatar from 'material-ui/Avatar';
 import IconButton from 'material-ui/IconButton';
 import Typography from 'material-ui/Typography';
+import Popover from 'material-ui/Popover';
 import red from 'material-ui/colors/red';
 import ImageGridList from '../GridList/ImageGridList';
 import CommentCard from './CommentCard.jsx';
@@ -18,6 +19,7 @@ import {
   MoreVert
 } from '@material-ui/icons';
 import { postService } from '../../services';
+import { isCurrentUser } from '../../utils';
 
 const styles = theme => ({
   postCard: {
@@ -102,7 +104,7 @@ const styles = theme => ({
 
 class PostCard extends React.Component {
   currStarCount = this.props.starCount;
-  state = { expanded: !!this.props.enableExpandComment, star: !!this.props.star, comment: '', starCount: this.currStarCount };
+  state = {disablePopover: true, expanded: !!this.props.enableExpandComment, star: !!this.props.star, comment: '', starCount: this.currStarCount, disableUpdatePost: true, content: this.props.content };
 
   handleExpandClick = () => {
     return !this.props.enableExpandComment ? this.setState({ expanded: !this.state.expanded }) : null;
@@ -115,7 +117,7 @@ class PostCard extends React.Component {
     this.setState({ star: !this.state.star, starCount: newStarCount() });
   };
 
-  handleKeyPress = (event) => {
+  handleCommentKeyPress = (event) => {
     event.preventDefault()
     if (event.which === 13) {
       if (event.shiftKey ) {
@@ -128,19 +130,75 @@ class PostCard extends React.Component {
     }
   }
 
+  handlePostKeyPress = (event) => {
+    event.preventDefault()
+    if (event.which === 13) {
+      if (event.shiftKey ) {
+        this.setState({content: this.state.content + '\n'})
+      } else {
+        const post = {id: this.props.postID, caption:event.target.value, hashtags: this._findHashtags(event.target.value)}
+        this.props.onSubmitUpdatePost(post)
+        this.setState({disableUpdatePost: true})
+      }
+    }
+  }
+
+  handleUpdate = () => {
+    this.setState({disableUpdatePost: true})
+  }
+
+  handleDelete = () => {
+
+  }
+
+  handleUpdateChange = (e) => {
+    this.setState({content: e.target.value})
+  }
+
   handleChange = (e) => {
     this.setState({comment: e.target.value})
+  }
+
+  _findHashtags(caption) {
+    var hashtags = [];
+    for (var i = 0; i < caption.length; i++) {
+      if (caption[i] === '#') {
+        console.log(i)
+        var hashtag='';
+        for (var j = i+1; j < caption.length; j++) {
+          if (j === caption.length-1) {
+            if (caption[j] === ' '){
+              return hashtags;
+            }
+            hashtag+=caption[j];
+            hashtags.push(hashtag);
+            return hashtags;
+          }
+
+          if (caption[j] === ' ') {
+            if (j === i + 1) {
+              i = j + 1;
+              break;
+            }
+            i = j + 1;
+            hashtags.push(hashtag);
+            break;
+          }
+          hashtag+=caption[j];
+        }
+      }
+    }
+    return hashtags;
   }
 
   render() {
     const {
       classes,
       mediaImages,
-      name,
       avatar,
-      content,
       postDate,
       comments,
+      user
     } = this.props;
     const { star, comment, starCount } = this.state;
     return (
@@ -149,15 +207,32 @@ class PostCard extends React.Component {
           <CardHeader
             avatar={
               <Avatar aria-label="Recipe" className={classes.avatar}>
-                {!!avatar ? <img src={avatar} alt="avatar" /> : name.substring(0,1).toUpperCase()}
+                {!!avatar ? <img src={avatar} alt="avatar" /> : user.user_name.substring(0,1).toUpperCase()}
               </Avatar>
             }
             action={
-              <IconButton>
+              <div>
+              <IconButton onClick={()=>{this.setState({disablePopover: !this.state.disablePopover})}}>
                 <MoreVert />
               </IconButton>
+              <Popover 
+                open={!this.state.disablePopover}
+                onClose={()=>{this.setState({disablePopover: true})}}
+                anchorOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+                }}
+                transformOrigin={{
+                  vertical: 'top',
+                  horizontal: 'left',
+                }}
+              >
+                <Typography onClick={()=>{this.setState({disablePopover: true, disableUpdatePost:false})}}>edit</Typography>
+                <Typography onClick={()=>{ this.props.onSubmitDeletePost(this.props.postID); this.setState({disablePopover: true})}}>delete</Typography>
+              </Popover>
+              </div>
             }
-            title={<span style={{fontWeight: 'bold'}}>{name}</span>}
+            title={<span style={{fontWeight: 'bold'}}>{user.user_name}</span>}
             subheader={postDate.toLocaleString()}
           />
           {
@@ -165,9 +240,20 @@ class PostCard extends React.Component {
             <ImageGridList srcs={mediaImages} />
           }
           <CardContent>
-            <Typography component="p">
-              {content}
-            </Typography>
+            {
+              this.state.disableUpdatePost ? 
+              <Typography component="p">
+              {this.state.content}
+              </Typography> :
+              isCurrentUser(user) &&
+              <Input
+                fullWidth
+                multiline
+                onChange={this.handleUpdateChange.bind(this)}
+                value={this.state.content}
+                onKeyPress={this.handlePostKeyPress.bind(this)}
+              />
+            }
           </CardContent>
           <CardActions className={classnames(classes.actions, classes.actionComment)} disableActionSpacing>
             <IconButton className={classes.iconComment} aria-label="Add to favorites" onClick={this.handleStarClick}>
@@ -206,7 +292,7 @@ class PostCard extends React.Component {
               className={classnames(classes.avatar, classes.avatarComment)}
               aria-label="Recipe"
             >
-             {!!avatar ? <img src={avatar} alt="avatar" /> : name.substring(0,1).toUpperCase()}
+             {!!avatar ? <img src={avatar} alt="avatar" /> : user.user_name.substring(0,1).toUpperCase()}
             </Avatar>
             <Input
               className={classnames(classes.textComment, classes.TextField)}
@@ -216,7 +302,7 @@ class PostCard extends React.Component {
               rowsMax={10}
               disableUnderline={true}
               value={comment}
-              onKeyPress={this.handleKeyPress.bind(this)}
+              onKeyPress={this.handleCommentKeyPress.bind(this)}
               onChange={this.handleChange.bind(this)}
               placeholder="Write a comment..."
             />
@@ -228,8 +314,8 @@ class PostCard extends React.Component {
 }
 
 PostCard.propTypes = {
+  user: PropTypes.object.isRequired,
   classes: PropTypes.object.isRequired,
-  name: PropTypes.string.isRequired,
   postID: PropTypes.number.isRequired,
   content: PropTypes.string.isRequired,
   postDate: PropTypes.object.isRequired,
@@ -237,6 +323,8 @@ PostCard.propTypes = {
   starCount: PropTypes.number.isRequired,
   enableExpandComment: PropTypes.bool,
   onSubmitComment: PropTypes.func.isRequired,
+  onSubmitUpdatePost: PropTypes.func.isRequired,
+  onSubmitDeletePost: PropTypes.func.isRequired,
 };
 
 export default withStyles(styles)(PostCard);

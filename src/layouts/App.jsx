@@ -1,12 +1,9 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { connect } from "react-redux";
 // creates a beautiful scrollbar
 import PerfectScrollbar from "perfect-scrollbar";
 import "perfect-scrollbar/css/perfect-scrollbar.css";
 import { withStyles } from "material-ui";
-import { withSwalInstance } from 'sweetalert2-react';
-import swal from 'sweetalert2';
 
 import { Header, Footer, Sidebar } from "components";
 import { AuthRoutes, authSidebar } from "routes/Auth/authRoutes.jsx"
@@ -15,10 +12,8 @@ import { isAuthenticated, isSuperAdmin } from "utils/auth-user";
 import appStyle from "assets/jss/material-dashboard-react/appStyle.jsx";
 import image from "assets/img/sidebar-2.jpg";
 import logo from "assets/img/reactlogo.png";
-import { alertActions, userActions } from "../actions";
-import { alertConstants } from "../constants";
+import { socialSidebar, SocialRoutes } from "../routes/SocialNetwork/socialRoutes";
 
-const SweetAlert = withSwalInstance(swal);
 
 class App extends React.Component {
   state = {
@@ -37,28 +32,13 @@ class App extends React.Component {
     this.refs.mainPanel.scrollTop = 0;
   }
   render() {
-    const { classes, alert, ...rest } = this.props;
+    const { classes, ...rest } = this.props;
     return (
       <div className={classes.wrapper}>
-        <SweetAlert
-          show={alert.success}
-          type='success'
-          title='Your work has been saved'
-          showConfirmButton={true}
-          onComfirm={()=> { this.props.dispathAlertClear(alertConstants.SUCCESS_CLEAR)}}
-        />
-        <SweetAlert
-          show={alert.error}
-          type='error'
-          title='Oops...'
-          text='Something went wrong!'
-          onComfirm={()=> { this.props.dispathAlertClear(alertConstants.SUCCESS_CLEAR)}}
-          onClose={()=> this.props.dispathAlertClear(alertConstants.ERROR_CLEAR)}
-        />
         <Sidebar
           routes={
             isAuthenticated() ? (
-              isSuperAdmin()? adminSidebar: null
+              isSuperAdmin()? adminSidebar: socialSidebar
             ):authSidebar
           }
           logoText={"Soccer Social"}
@@ -73,7 +53,7 @@ class App extends React.Component {
           <Header
             routes={
               isAuthenticated() ? (
-                isSuperAdmin()? adminSidebar: null
+                isSuperAdmin()? adminSidebar: socialSidebar
               ):authSidebar
             }
             handleDrawerToggle={this.handleDrawerToggle}
@@ -83,7 +63,7 @@ class App extends React.Component {
             <div className={classes.container}>
               {
                 isAuthenticated() ? (
-                  isSuperAdmin() ? <AdminRoutes />:null
+                  isSuperAdmin() ? <AdminRoutes />:<SocialRoutes />
                 ):<AuthRoutes />
               }
             </div>
@@ -99,13 +79,5 @@ App.propTypes = {
   classes: PropTypes.object.isRequired
 };
 
-const mapStateToProps = (state) => {
-  const { alert } = state;
-  return { alert }
-}
-
-export default connect(mapStateToProps, {
-  deleteUser: userActions.delete,
-  dispathAlertClear: alertActions.clear
-})(withStyles(appStyle)(App));
+export default withStyles(appStyle)(App);
 

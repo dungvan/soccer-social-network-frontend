@@ -1,4 +1,5 @@
 import { authHeader } from '../utils';
+import env from 'env';
 
 export const teamService = {
     getAll,
@@ -16,7 +17,7 @@ function getAll(page) {
         headers: authHeader()
     };
 
-    return fetch('http://localhost/teams?page=' + page, requestOptions).then(handleResponse);
+    return fetch(env.url+'/teams?page=' + page, requestOptions).then(handleResponse);
 }
 
 function getByUser(id) {
@@ -26,7 +27,7 @@ function getByUser(id) {
         headers: authHeader()
     };
 
-    return fetch('http://localhost/teams/users/' + id, requestOptions).then(handleResponse);
+    return fetch(env.url+'/teams/users/' + id, requestOptions).then(handleResponse);
 }
 
 function getOne(id) {
@@ -36,7 +37,7 @@ function getOne(id) {
         headers: authHeader()
     };
 
-    return fetch('http://localhost/teams/' + id, requestOptions).then(handleResponse);
+    return fetch(env.url+'/teams/' + id, requestOptions).then(handleResponse);
 }
 
 function create(team) {
@@ -47,7 +48,7 @@ function create(team) {
         body: JSON.stringify(team)
     };
 
-    return fetch('http://localhost/teams', requestOptions).then(handleResponse);
+    return fetch(env.url+'/teams', requestOptions).then(handleResponse);
 }
 
 function update(team) {
@@ -58,7 +59,7 @@ function update(team) {
         body: JSON.stringify(team)
     }
 
-    return fetch('http://localhost/teams/'+team.id, requestOptions).then(handleResponse);
+    return fetch(env.url+'/teams/'+team.id, requestOptions).then(handleResponse);
 }
 
 function _delete(id) {
@@ -68,7 +69,7 @@ function _delete(id) {
         headers: authHeader()
     }
 
-    return fetch('http://localhost/teams/' + id, requestOptions).then(handleResponse);
+    return fetch(env.url+'/teams/' + id, requestOptions).then(handleResponse);
 }
 
 function handleResponse(response) {

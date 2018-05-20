@@ -3,6 +3,7 @@ import { postService } from 'services';
 import { actions } from './';
 
 export const postActions = {
+  uploadImages,
   create,
   getAll,
   getByUser,
@@ -10,6 +11,12 @@ export const postActions = {
   update,
   delete: _delete
 };
+
+function uploadImages(files) {
+  return dispatch => {
+    return postService.uploadImages(files)
+  }
+}
 
 function create(post) {
   return dispatch => {

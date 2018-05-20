@@ -1,4 +1,5 @@
 import React from "react";
+import { NavLink } from 'react-router-dom';
 import classNames from "classnames";
 import { Manager, Target, Popper } from "react-popper";
 import {
@@ -16,6 +17,7 @@ import { Person, Notifications, Dashboard, Search } from "@material-ui/icons";
 import { CustomInput, IconButton as SearchButton } from "components";
 
 import headerLinksStyle from "assets/jss/material-dashboard-react/headerLinksStyle";
+import { getCurrentUsername } from "../../utils";
 
 class HeaderLinks extends React.Component {
   state = {
@@ -51,6 +53,7 @@ class HeaderLinks extends React.Component {
         >
           <Search className={classes.searchIcon} />
         </SearchButton>
+        <NavLink to="/">
         <IconButton
           color="inherit"
           aria-label="Dashboard"
@@ -61,6 +64,7 @@ class HeaderLinks extends React.Component {
             <p className={classes.linkText}>Dashboard</p>
           </Hidden>
         </IconButton>
+        </NavLink>
         <Manager style={{ display: "inline-block" }}>
           <Target>
             <IconButton
@@ -72,15 +76,15 @@ class HeaderLinks extends React.Component {
               className={classes.buttonLink}
             >
               <Notifications className={classes.links} />
-              <span className={classes.notifications}>5</span>
-              <Hidden mdUp>
+              {false && <span className={classes.notifications}></span>}
+              { false && <Hidden mdUp>
                 <p onClick={this.handleClick} className={classes.linkText}>
                   Notification
                 </p>
-              </Hidden>
+              </Hidden>}
             </IconButton>
           </Target>
-          <Popper
+          { false && <Popper
             placement="bottom-start"
             eventsEnabled={open}
             className={
@@ -132,7 +136,9 @@ class HeaderLinks extends React.Component {
               </Grow>
             </ClickAwayListener>
           </Popper>
+          }
         </Manager>
+        <NavLink to={"/admin/user/"+getCurrentUsername()}>
         <IconButton
           color="inherit"
           aria-label="Person"
@@ -143,6 +149,7 @@ class HeaderLinks extends React.Component {
             <p className={classes.linkText}>Profile</p>
           </Hidden>
         </IconButton>
+        </NavLink>
       </div>
     );
   }

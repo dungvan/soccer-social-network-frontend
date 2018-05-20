@@ -77,6 +77,7 @@ export class UserList extends Component {
   render () {
     const { total, items, alert } = this.props;
     const { page } = this.state;
+    console.log(items)
     return (
       <Grid container>
         <SweetAlert

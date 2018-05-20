@@ -1,15 +1,32 @@
 import { authHeader } from '../utils';
+import env from 'env';
 
 export const postService = {
-    getAll,
-    getByUser,
-    upStar,
-    downStar,
-    getOne,
-    create,
-    update,
-    delete: _delete
+  uploadImages,
+  getAll,
+  getByUser,
+  upStar,
+  downStar,
+  getOne,
+  create,
+  update,
+  delete: _delete
 };
+
+function uploadImages(files) {
+  var formdata = new FormData()
+  if (!files || files.length === 0 ) {
+    return () => {return Error("no image to send")}
+  } 
+  formdata.append("image_files", files)
+  const requestOptions = {
+    method: 'POST',
+    mode: 'CORS',
+    headers: {...authHeader(), "Content-Type": "multipart/form-data"},
+    data: formdata
+  }
+  return fetch(env.url+"/posts/images", requestOptions).then(handleResponse);
+}
 
 function getAll(page) {
     const requestOptions = {
@@ -18,7 +35,7 @@ function getAll(page) {
         headers: authHeader()
     };
 
-    return fetch('http://localhost/posts?page=' + page, requestOptions).then(handleResponse);
+    return fetch(env.url+'/posts?page=' + page, requestOptions).then(handleResponse);
 }
 
 function getByUser(id) {
@@ -28,7 +45,7 @@ function getByUser(id) {
         headers: authHeader()
     };
 
-    return fetch('http://localhost/posts/users/' + id, requestOptions).then(handleResponse);
+    return fetch(env.url+'/posts/users/' + id, requestOptions).then(handleResponse);
 }
 
 function getOne(id) {
@@ -38,7 +55,7 @@ function getOne(id) {
         headers: authHeader()
     };
 
-    return fetch('http://localhost/posts/' + id, requestOptions).then(handleResponse);
+    return fetch(env.url+'/posts/' + id, requestOptions).then(handleResponse);
 }
 
 function create(post) {
@@ -49,7 +66,7 @@ function create(post) {
         body: JSON.stringify(post)
     };
 
-    return fetch('http://localhost/posts', requestOptions).then(handleResponse);
+    return fetch(env.url+'/posts', requestOptions).then(handleResponse);
 }
 
 function update(post) {
@@ -57,32 +74,30 @@ function update(post) {
         method: 'PUT',
         mode: 'CORS',
         headers: authHeader(),
-        body: JSON.stringify(post)
+        body: JSON.stringify({caption: post.caption, hashtags: post.hashtags})
     }
 
-    return fetch('http://localhost/posts', requestOptions).then(handleResponse);
+    return fetch(env.url+'/posts/'+post.id, requestOptions).then(handleResponse);
 }
 
 function upStar(post) {
     const requestOptions = {
         method: 'POST',
         mode: 'CORS',
-        headers: authHeader(),
-        body: JSON.stringify(post)
+        headers: authHeader()
     }
 
-    return fetch('http://localhost/posts/'+post.id+'/star', requestOptions).then(handleResponse);
+    return fetch(env.url+'/posts/'+post.id+'/star', requestOptions).then(handleResponse);
 }
 
 function downStar(post) {
     const requestOptions = {
         method: 'DELETE',
         mode: 'CORS',
-        headers: authHeader(),
-        body: JSON.stringify(post)
+        headers: authHeader()
     }
 
-    return fetch('http://localhost/posts/'+post.id+'/star', requestOptions).then(handleResponse);
+    return fetch(env.url+'/posts/'+post.id+'/star', requestOptions).then(handleResponse);
 }
 
 function _delete(id) {
@@ -92,7 +107,7 @@ function _delete(id) {
         headers: authHeader()
     }
 
-    return fetch('http://localhost/posts/' + id, requestOptions).then(handleResponse);
+    return fetch(env.url+'/posts/' + id, requestOptions).then(handleResponse);
 }
 
 function handleResponse(response) {
@@ -104,3 +119,4 @@ function handleResponse(response) {
     }
     return response.json()
 }
+

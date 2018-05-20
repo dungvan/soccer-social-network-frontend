@@ -19,3 +19,7 @@ export function getCurrentUsername() {
         return null
     return loginedUser.user_name
 }
+
+export function clearLoginedUser() {
+    localStorage.removeItem("user")
+}

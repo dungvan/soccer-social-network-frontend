@@ -11,7 +11,7 @@ import {
   CustomInput,
   ItemGrid
 } from "components";
-import { userConstants } from 'constants';
+import { userConstants } from '../../../constants';
 
 class LoginForm extends React.Component {
   constructor(props) {

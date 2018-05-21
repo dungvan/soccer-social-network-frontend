@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { userActions } from 'actions';
+import { userActions, alertActions } from 'actions';
 import { Grid } from "material-ui";
 import {
   RegularCard,
@@ -9,6 +9,11 @@ import {
   CustomInput,
   ItemGrid
 } from "components";
+import { userConstants, alertConstants } from "../../../constants";
+import { withSwalInstance } from 'sweetalert2-react';
+import swal from 'sweetalert2'
+
+const SweetAlert = withSwalInstance(swal);
 
 class RegisterForm extends React.Component {
   constructor(props) {
@@ -44,17 +49,33 @@ class RegisterForm extends React.Component {
   handleSubmit(event) {
       this.setState({ submitted: true });
       const { user } = this.state;
-      const { dispatch } = this.props;
+      const { register } = this.props;
       if (user.firstName && user.lastName && user.username && user.password) {
-          dispatch(userActions.register(user));
+          register(user);
       }
   }
 
   render() {
-    const { registering  } = this.props;
+    const { registering, alert } = this.props;
     const { user, submitted } = this.state;
     return (
       <div>
+      <SweetAlert
+          show={alert.success}
+          type='success'
+          title='Your work has been saved'
+          showConfirmButton={true}
+          onClose={()=> {this.props.dispathAlertClear(alertConstants.SUCCESS_CLEAR)}}
+          onConfirm={()=> {this.props.dispathAlertClear(alertConstants.SUCCESS_CLEAR)}}
+        />
+        <SweetAlert
+          show={alert.error}
+          type='error'
+          title='Oops...'
+          text='Something went wrong!'
+          onConfirm={()=> { this.props.dispathAlertClear(alertConstants.ERROR_CLEAR)}}
+          onClose={()=> this.props.dispathAlertClear(alertConstants.ERROR_CLEAR)}
+        />
         <RegularCard
           cardTitle="Register"
           cardSubtitle="Complete your form"
@@ -182,10 +203,14 @@ class RegisterForm extends React.Component {
 
 function mapStateToProps(state) {
     const { registering } = state.registration;
+    const { alert } = state;
     return {
-        registering
+        registering, alert
     };
 }
 
-const connectedRegisterForm = connect(mapStateToProps)(RegisterForm);
+const connectedRegisterForm = connect(mapStateToProps,{
+  dispathAlertClear: alertActions.clear,
+  register: userActions.register
+})(RegisterForm);
 export { connectedRegisterForm as RegisterForm };

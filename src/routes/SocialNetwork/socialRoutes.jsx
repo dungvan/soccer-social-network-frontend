@@ -16,7 +16,7 @@ const SocialRoutes = () => {
     <Switch>
       <Route exact path="/" component={PostExplore} />
       <Route path="/post/:id" component={PostDetail} />
-      <Route path="/user/:username" component={UserProfile} />
+      <Route exact path="/user/:username" component={UserProfile} />
       <Route path="/logout" component={Logout} />
     </Switch>
   );

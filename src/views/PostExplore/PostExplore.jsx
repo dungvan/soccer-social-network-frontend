@@ -190,13 +190,12 @@ class PostExplore extends Component {
               <PostCard
                 key={post.id}
                 postID={post.id}
+                user={post.user}
                 star={post.star_flag}
                 starCount={post.star_count}
-                user={{id: 1, user_name: 'congthinh', first_name: 'Thịnh', last_name: 'Hoàng'}}
-                postDate={new Date("2018-05-17")}
-                content={"Cần 1 hậu vệ cánh trái cho trận giao hữu Khóa 12 và khóa 08 Hội Sv điện dương"}
-                // mediaImages={post.image_urls}
-                comments={[]}
+                postDate={new Date(post.created_at)}
+                content={post.caption}
+                comments={post.comments}
                 onSubmitComment={this.handleSubmitComment}
                 onSubmitUpdatePost={this.handleSubmitUpdatePost}
                 onSubmitDeletePost={this.handleDeletePost}

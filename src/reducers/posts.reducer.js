@@ -15,7 +15,7 @@ export function posts(state = {items: [], post: {}, total: 0, page: 1}, action) 
       return {
         ...state,
         newComment: action.data.comment,
-        items: [...state.items.filter(post => post.id === action.data.post_id), ...oldPost],
+        items: [...state.items.filter(post => post.id !== action.data.post_id), ...oldPost],
         loading: false
       };
     case commentConstants.CREATE_FAILURE:

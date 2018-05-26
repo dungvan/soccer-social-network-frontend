@@ -25,7 +25,7 @@ function uploadImages(files) {
     headers: {...authHeader(), "Content-Type": "multipart/form-data"},
     data: formdata
   }
-  return fetch(env.url+"/posts/images", requestOptions).then(handleResponse);
+  return fetch(env.api+"/posts/images", requestOptions).then(handleResponse);
 }
 
 function getAll(page) {
@@ -35,7 +35,7 @@ function getAll(page) {
         headers: authHeader()
     };
 
-    return fetch(env.url+'/posts?page=' + page, requestOptions).then(handleResponse);
+    return fetch(env.api+'/posts?page=' + page, requestOptions).then(handleResponse);
 }
 
 function getByUser(id) {
@@ -45,7 +45,7 @@ function getByUser(id) {
         headers: authHeader()
     };
 
-    return fetch(env.url+'/posts/users/' + id, requestOptions).then(handleResponse);
+    return fetch(env.api+'/posts/users/' + id, requestOptions).then(handleResponse);
 }
 
 function getOne(id) {
@@ -55,7 +55,7 @@ function getOne(id) {
         headers: authHeader()
     };
 
-    return fetch(env.url+'/posts/' + id, requestOptions).then(handleResponse);
+    return fetch(env.api+'/posts/' + id, requestOptions).then(handleResponse);
 }
 
 function create(post) {
@@ -66,7 +66,7 @@ function create(post) {
         body: JSON.stringify(post)
     };
 
-    return fetch(env.url+'/posts', requestOptions).then(handleResponse);
+    return fetch(env.api+'/posts', requestOptions).then(handleResponse);
 }
 
 function update(post) {
@@ -77,7 +77,7 @@ function update(post) {
         body: JSON.stringify({caption: post.caption, hashtags: post.hashtags})
     }
 
-    return fetch(env.url+'/posts/'+post.id, requestOptions).then(handleResponse);
+    return fetch(env.api+'/posts/'+post.id, requestOptions).then(handleResponse);
 }
 
 function upStar(post) {
@@ -87,7 +87,7 @@ function upStar(post) {
         headers: authHeader()
     }
 
-    return fetch(env.url+'/posts/'+post.id+'/star', requestOptions).then(handleResponse);
+    return fetch(env.api+'/posts/'+post.id+'/star', requestOptions).then(handleResponse);
 }
 
 function downStar(post) {
@@ -97,7 +97,7 @@ function downStar(post) {
         headers: authHeader()
     }
 
-    return fetch(env.url+'/posts/'+post.id+'/star', requestOptions).then(handleResponse);
+    return fetch(env.api+'/posts/'+post.id+'/star', requestOptions).then(handleResponse);
 }
 
 function _delete(id) {
@@ -107,7 +107,7 @@ function _delete(id) {
         headers: authHeader()
     }
 
-    return fetch(env.url+'/posts/' + id, requestOptions).then(handleResponse);
+    return fetch(env.api+'/posts/' + id, requestOptions).then(handleResponse);
 }
 
 function handleResponse(response) {

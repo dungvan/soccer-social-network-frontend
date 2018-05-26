@@ -8,6 +8,7 @@ import RegularCard from "./Cards/RegularCard.jsx";
 import StatsCard from "./Cards/StatsCard.jsx";
 import TasksCard from "./Cards/TasksCard.jsx";
 import PostCard from "./Cards/PostCard.jsx";
+import MatchCard from "./Cards/MatchCard.jsx";
 
 // ##############################
 // // // CustomButtons
@@ -90,6 +91,7 @@ export {
   StatsCard,
   TasksCard,
   PostCard,
+  MatchCard,
   // CustomButtons
   Button,
   IconButton,

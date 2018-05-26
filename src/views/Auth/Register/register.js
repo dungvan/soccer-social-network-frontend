@@ -9,7 +9,7 @@ import {
   CustomInput,
   ItemGrid
 } from "components";
-import { userConstants, alertConstants } from "../../../constants";
+import { alertConstants } from "../../../constants";
 import { withSwalInstance } from 'sweetalert2-react';
 import swal from 'sweetalert2'
 
@@ -20,15 +20,14 @@ class RegisterForm extends React.Component {
     super(props);
 
     this.state = {
-        user: {
-            firstName: '',
-            lastName: '',
-            username: '',
-            email: '',
-            password: '',
-            passwordConfirmation: ''
-        },
-        submitted: false
+      user: {
+        firstName: '',
+        lastName: '',
+        username: '',
+        email: '',
+        password: '',
+        passwordConfirmation: ''
+      }
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -36,28 +35,37 @@ class RegisterForm extends React.Component {
   }
 
   handleChange(event) {
-      const { name, value } = event.target;
-      const { user } = this.state;
-      this.setState({
-          user: {
-              ...user,
-              [name]: value
-          }
-      });
+    const { name, value } = event.target;
+    const { user } = this.state;
+    this.setState({
+      user: {
+        ...user,
+        [name]: value
+      }
+    });
   }
 
   handleSubmit(event) {
-      this.setState({ submitted: true });
-      const { user } = this.state;
-      const { register } = this.props;
-      if (user.firstName && user.lastName && user.username && user.password) {
-          register(user);
-      }
+    const { user } = this.state;
+    const { register } = this.props;
+    if (user.firstName && user.lastName && user.username && user.password) {
+      register(user);
+      this.setState({
+        user: {
+          firstName: '',
+          lastName: '',
+          username: '',
+          email: '',
+          password: '',
+          passwordConfirmation: ''
+        }
+      });
+    }
   }
 
   render() {
     const { registering, alert } = this.props;
-    const { user, submitted } = this.state;
+    const { user } = this.state;
     return (
       <div>
       <SweetAlert

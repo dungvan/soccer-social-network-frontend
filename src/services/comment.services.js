@@ -16,7 +16,7 @@ function upStar(comment) {
         headers: authHeader()
     }
 
-    return fetch(env.url+'/posts/'+comment.post_id+'/comments/'+comment.id+'/star', requestOptions).then(handleResponse);
+    return fetch(env.api+'/posts/'+comment.post_id+'/comments/'+comment.id+'/star', requestOptions).then(handleResponse);
 }
 
 function downStar(comment) {
@@ -26,7 +26,7 @@ function downStar(comment) {
         headers: authHeader()
     }
 
-    return fetch(env.url+'/posts/'+comment.post_id+'/comments/'+comment.id+'/star', requestOptions).then(handleResponse);
+    return fetch(env.api+'/posts/'+comment.post_id+'/comments/'+comment.id+'/star', requestOptions).then(handleResponse);
 }
 
 function create(comment) {
@@ -48,7 +48,7 @@ function update(comment) {
         body: JSON.stringify({content : comment.content})
     }
 
-    return fetch(env.url+'/posts/'+comment.post_id+'/comments/'+comment.id, requestOptions).then(handleResponse);
+    return fetch(env.api+'/posts/'+comment.post_id+'/comments/'+comment.id, requestOptions).then(handleResponse);
 }
 
 function _delete(comment) {
@@ -58,7 +58,7 @@ function _delete(comment) {
         headers: authHeader()
     }
 
-    return fetch(env.url+'/posts/'+comment.post_id+'/comments/' + comment.id, requestOptions).then(handleResponse);
+    return fetch(env.api+'/posts/'+comment.post_id+'/comments/' + comment.id, requestOptions).then(handleResponse);
 }
 
 function handleResponse(response) {

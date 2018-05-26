@@ -18,7 +18,7 @@ function getAll(page) {
         headers: authHeader()
     };
 
-    return fetch(env.url+'/matches?page=' + page, requestOptions).then(handleResponse);
+    return fetch(env.api+'/matches?page=' + page, requestOptions).then(handleResponse);
 }
 
 function getByMaster(id) {
@@ -28,7 +28,7 @@ function getByMaster(id) {
         headers: authHeader()
     };
 
-    return fetch(env.url+'/matches/masters/' + id, requestOptions).then(handleResponse);
+    return fetch(env.api+'/matches/masters/' + id, requestOptions).then(handleResponse);
 }
 
 function getByPlayer(id) {
@@ -38,7 +38,7 @@ function getByPlayer(id) {
         headers: authHeader()
     };
 
-    return fetch(env.url+'/matches/players/' + id, requestOptions).then(handleResponse);
+    return fetch(env.api+'/matches/players/' + id, requestOptions).then(handleResponse);
 }
 
 function getByTeam(id) {
@@ -48,7 +48,7 @@ function getByTeam(id) {
         headers: authHeader()
     };
 
-    return fetch(env.url+'/matches/teams/' + id, requestOptions).then(handleResponse);
+    return fetch(env.api+'/matches/teams/' + id, requestOptions).then(handleResponse);
 }
 
 function getOne(id) {
@@ -58,7 +58,7 @@ function getOne(id) {
         headers: authHeader()
     };
 
-    return fetch(env.url+'/matches/' + id, requestOptions).then(handleResponse);
+    return fetch(env.api+'/matches/' + id, requestOptions).then(handleResponse);
 }
 
 function create(match) {
@@ -69,7 +69,7 @@ function create(match) {
         body: JSON.stringify(match)
     };
 
-    return fetch(env.url+'/matches', requestOptions).then(handleResponse);
+    return fetch(env.api+'/matches', requestOptions).then(handleResponse);
 }
 
 function update(match) {
@@ -80,7 +80,7 @@ function update(match) {
         body: JSON.stringify(match)
     }
 
-    return fetch(env.url+'/matches', requestOptions).then(handleResponse);
+    return fetch(env.api+'/matches', requestOptions).then(handleResponse);
 }
 
 function _delete(id) {
@@ -90,7 +90,7 @@ function _delete(id) {
         headers: authHeader()
     }
 
-    return fetch(env.url+'/matches/' + id, requestOptions).then(handleResponse);
+    return fetch(env.api+'/matches/' + id, requestOptions).then(handleResponse);
 }
 
 function handleResponse(response) {

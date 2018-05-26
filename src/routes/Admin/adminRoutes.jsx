@@ -17,6 +17,7 @@ import {
 } from "@material-ui/icons";
 import { getCurrentUsername } from "utils";
 import Logout from "../../views/Auth/Logout/Logout";
+import MatchProfile from "../../views/MatchProfile/MatchProfile";
 
 const AdminRoutes = () => {
   return (
@@ -29,6 +30,7 @@ const AdminRoutes = () => {
       <Route exact path="/" component={PostExplore} />
       <Route path="/post/:id" component={PostDetail} />
       <Route path="/logout" component={Logout} />
+      <Route path="/matches" component={MatchProfile} />
     </Switch>
   );
 }

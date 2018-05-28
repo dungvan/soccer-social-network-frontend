@@ -48,6 +48,18 @@ const styles = theme => ({
   },
   avatar: {
     backgroundColor: red[300],
+    boxSizing: 'border-box',
+    transitionDuration: '0.4s',
+    '&:hover': {
+      border: '2px solid #8888dd',
+      cursor: 'pointer'
+    },
+    '&:active': {
+      opacity: 0.5
+    }
+  },
+  avatarContent: {
+    paddingTop: 3
   },
   cardComment: {
     display: 'flex',
@@ -60,7 +72,16 @@ const styles = theme => ({
   avatarComment: {
     marginTop:10,
     height:32,
-    width:32
+    width:32,
+    boxSizing: 'border-box',
+    transitionDuration: '0.4s',
+    '&:hover': {
+      border: '2px solid #8888dd',
+      cursor: 'pointer'
+    },
+    '&:active': {
+      opacity: 0.5
+    }
   },
   line: {
     height:1, margin:0,
@@ -207,7 +228,7 @@ class PostCard extends React.Component {
           <CardHeader
             avatar={
               <Avatar aria-label="Recipe" className={classes.avatar}>
-                {!!avatar ? <img src={avatar} alt="avatar" /> : user.user_name.substring(0,1).toUpperCase()}
+                {!!avatar ? <img src={avatar} alt="avatar" /> : <span className={classes.avatarContent}  style={{fontSize: '24px'}}>{user.user_name.substring(0,1).toUpperCase()}</span>}
               </Avatar>
             }
             action={
@@ -228,7 +249,7 @@ class PostCard extends React.Component {
                 }}
               >
                 <Typography onClick={()=>{this.setState({disablePopover: true, disableUpdatePost:false})}}>edit</Typography>
-                <Typography onClick={()=>{ this.props.onSubmitDeletePost(this.props.postID); this.setState({disablePopover: true})}}>delete</Typography>
+                <Typography onClick={()=>{this.props.onSubmitDeletePost(this.props.postID); this.setState({disablePopover: true})}}>delete</Typography>
               </Popover>
               </div>
             }
@@ -292,7 +313,7 @@ class PostCard extends React.Component {
               className={classnames(classes.avatar, classes.avatarComment)}
               aria-label="Recipe"
             >
-             {!!avatar ? <img src={avatar} alt="avatar" /> : user.user_name.substring(0,1).toUpperCase()}
+             {!!avatar ? <img src={avatar} alt="avatar" /> : <span style={{paddingTop:2.5}}>{user.user_name.substring(0,1).toUpperCase()}</span>}
             </Avatar>
             <Input
               className={classnames(classes.textComment, classes.TextField)}

@@ -30,7 +30,19 @@ const styles = theme => {
     avatarComment: {
       marginTop:10,
       height:32,
-      width:32
+      width:32,
+      boxSizing: 'border-box',
+      transitionDuration: '0.4s',
+      '&:hover': {
+        border: '2px solid #8888dd',
+        cursor: 'pointer'
+      },
+      '&:active': {
+        opacity: 0.5
+      }
+    },
+    avatarContent: {
+      paddingTop: 2.5
     },
     line: {
       height:1, margin:0,
@@ -107,7 +119,7 @@ class CommentCard extends Component {
           className={classnames(classes.avatar, classes.avatarComment)}
           aria-label="Recipe"
         >
-        {!!comment.avatar ? <img src={comment.avatar} alt="avatar" /> : comment.user.user_name.substring(0,1).toUpperCase()}
+        {!!comment.avatar ? <img src={comment.avatar} alt="avatar" /> : <span className={classes.avatarContent}>{comment.user.user_name.substring(0,1).toUpperCase()}</span>}
         </Avatar>
         <div>
           <div style={{display: 'flex'}}>

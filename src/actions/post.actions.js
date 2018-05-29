@@ -25,7 +25,7 @@ function create(post) {
     postService.create(post)
       .then(
         resp => {
-          dispatch(actions.success(postConstants.CREATE_SUCCESS, {post}));
+          dispatch(actions.success(postConstants.CREATE_SUCCESS, {post, resp}));
         },
         error => {
           console.log(error)

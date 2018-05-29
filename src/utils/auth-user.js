@@ -20,6 +20,13 @@ export function getCurrentUsername() {
     return loginedUser.user_name
 }
 
+export function getCurrentUser() {
+    const loginedUser = JSON.parse(localStorage.getItem("user"));
+    if (!loginedUser)
+        return null
+    return loginedUser
+}
+
 export function clearLoginedUser() {
     localStorage.removeItem("user")
 }

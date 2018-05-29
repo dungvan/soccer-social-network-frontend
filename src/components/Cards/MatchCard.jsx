@@ -9,6 +9,9 @@ import {
   ExpandMore
 } from '@material-ui/icons';
 import winner from 'assets/img/winner.png';
+import draw from 'assets/img/draw.png';
+import { getCurrentUsername } from 'utils';
+import { isNil } from 'lodash';
 
 const styles = theme => ({
   card: {
@@ -68,6 +71,7 @@ const styles = theme => ({
   },
   teamName: {
     display: 'block',
+    fontWeight: 'bold',
     textAlign: 'center',
     height: '33.3%',
     lineHeight: '40px',
@@ -106,7 +110,7 @@ const styles = theme => ({
     marginTop: -20,
     marginLeft: 100
   },
-  team2Winer: {
+  team2Winner: {
     marginTop: -20,
     marginLeft: 260
   },
@@ -116,11 +120,20 @@ const styles = theme => ({
   },
   tournamentInfo: {
     fontSize: '11px',
+  },
+  goalsEqual: {
+    border: '1.5px solid gray',
+    color: 'gray'
+  },
+  draw: {
+    marginTop: -20,
+    marginLeft: 120
   }
 })
 
 class MatchCard extends Component {
   state = {expanded: false}
+  status = 'none'
   handleExpandClick = () => {
     this.setState({expanded: !this.state.expanded})
   }
@@ -132,13 +145,17 @@ class MatchCard extends Component {
       date,
       user,
       avatar,
-     } = this.props;
+      team,
+      updateScore,
+      goals
+    } = this.props;
+    this.status = (!isNil(goals[1]) && !isNil(goals[2])) ? (goals[1] > goals[2] ? 'win':(goals[1] !== goals[2] ? 'lose':'draw')):'none'
     return (
       <Card className={classes.card}>
         <CardHeader
           className={classes.cardHeader}
           avatar={
-            <Avatar aria-label="Recipe" className={classes.avatar} onClick={() => {console.log("fffffffffffffffff")}}>
+            <Avatar aria-label="Recipe" className={classes.avatar} onClick={() => {return this.props.history.push('/user/'+getCurrentUsername())}}>
                 {!!avatar ? <img src={avatar} alt="avatar" /> : <span className={classes.avatarContent}>{user.user_name.substring(0,1).toUpperCase()}</span>}
             </Avatar>
           }
@@ -182,16 +199,25 @@ class MatchCard extends Component {
           </Collapse>
         }
         <CardContent className={classes.cardContent} style={{paddingBottom: 3}} >
-          <img src={winner} alt="winner" className={classnames(classes.team2Winer, classes.label)} />
-          <div className={classnames(classes.left, classes.lose)}>
-            <span className={classes.teamName}>team1</span>
+          {this.status !== 'draw' && this.status !== 'none' &&
+            <img src={winner} alt="winner" className={classnames(this.status === 'win'? classes.team1Winner : classes.team2Winner, classes.label)} />
+          }
+          {this.status === 'draw' &&
+            <img src={draw} alt="draw" className={classnames(classes.draw, classes.label)} />
+          }
+          <div className={classnames(classes.left, this.status === 'win'? classes.win : (this.status === 'lose' ? classes.lose :classes.goalsEqual))}>
+            <span className={classes.teamName}>{team[1].name}</span>
             {this.state.expanded &&
-              <span className={classes.score}>1</span>}
+              (!updateScore ?
+                <span className={classes.score}>{goals[1]}</span>:<input type="number" className={classes.score} style={{marginLeft:30, width:75, height:50, paddingLeft:10, paddingTop:10}}/>
+              )}
           </div>
-          <div className={classnames(classes.right, classes.win)}>
-            <span className={classes.teamName}>team2</span>
+          <div className={classnames(classes.right, this.status === 'win'? classes.lose : (this.status === 'lose' ? classes.win :classes.goalsEqual))}>
+            <span className={classes.teamName}>{team[2].name}</span>
             {this.state.expanded &&
-              <span className={classes.score}>2</span>}
+              (!updateScore ?
+                <span className={classes.score}>{goals[2]}</span>:<input type="number" className={classes.score} style={{marginLeft:30, width:75, height:50, paddingLeft:10, paddingTop:10}}/>
+              )}
           </div>
         </CardContent>
       </Card>
@@ -202,7 +228,9 @@ class MatchCard extends Component {
 MatchCard.protoTypes = {
   user: PropTypes.object.isRequired,
   title: PropTypes.string.isRequired,
-  date: PropTypes.object.isRequired
+  date: PropTypes.object.isRequired,
+  team: PropTypes.object.isRequired,
+  goals: PropTypes.object.isRequired,
 }
 
 export default withStyles(styles)(MatchCard);

@@ -1,4 +1,5 @@
 import { commentConstants, postConstants } from "../constants";
+import { getCurrentUser } from "../utils";
 
 export function posts(state = {items: [], post: {}, total: 0, page: 1}, action) {
   switch (action.type) {
@@ -23,6 +24,18 @@ export function posts(state = {items: [], post: {}, total: 0, page: 1}, action) 
         ...state,        
         loading: false
       };
+    case postConstants.CREATE_REQUEST:
+    return {
+      ...state,
+      loading: true
+    }
+    case postConstants.CREATE_SUCCESS:
+      return {
+        ...state,
+        total: state.total + 1,
+        items: [{id: action.data.resp.post_id, created_at: new Date().toLocaleTimeString(), star_count: 0, star_flag: false, ...action.data.post, user: getCurrentUser(), comments: []}, ...state.items],
+        loading: true
+      }
     case postConstants.GETALL_REQUEST:
       return {
         ...state,

@@ -5,7 +5,7 @@ import PerfectScrollbar from "perfect-scrollbar";
 import "perfect-scrollbar/css/perfect-scrollbar.css";
 import { withStyles } from "material-ui";
 
-import { Header, Footer, Sidebar } from "components";
+import { Header, Sidebar } from "components";
 import { AuthRoutes, authSidebar } from "routes/Auth/authRoutes.jsx"
 import { AdminRoutes, adminSidebar } from "routes/Admin/adminRoutes.jsx";
 import { isAuthenticated, isSuperAdmin } from "utils/auth-user";
@@ -68,7 +68,6 @@ class App extends React.Component {
               }
             </div>
           </div>
-          <Footer />
         </div>
       </div>
     );

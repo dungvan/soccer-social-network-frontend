@@ -18,11 +18,14 @@ class MatchProfile extends Component {
             items.map(match => {
               return (
                 <MatchCard
+                  history={this.props.history}
                   key={match.id}
                   user={match.master}
                   title={match.description}
                   date={new Date(match.start_date)}
                   tournament={match.tournament}
+                  team={{1: match.team1, 2:match.team2}}
+                  goals={{1: match.team1_goals, 2: match.team2_goals}}
                 />
               );
             })

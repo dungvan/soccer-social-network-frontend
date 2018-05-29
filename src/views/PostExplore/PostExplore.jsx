@@ -29,7 +29,6 @@ class PostExplore extends Component {
     console.log({caption, type: createType, hashtags, image_names})
     this.props.create({caption, type: createType, hashtags, image_names});
     this.setState({caption: ''})
-    window.location.reload()
   }
 
   handlePostChange = (e) => {
@@ -104,6 +103,7 @@ class PostExplore extends Component {
                 fullWidth
                 rows={this.state.rows}
                 multiline
+                value={this.state.caption}
                 disabled={this.state.disablePost}
                 placeholder={"What's on your mind," + getCurrentUsername() + "?"}
                 onChange={this.handlePostChange}

@@ -337,7 +337,7 @@ class PostCard extends React.Component {
 PostCard.propTypes = {
   user: PropTypes.object.isRequired,
   classes: PropTypes.object.isRequired,
-  postID: PropTypes.number.isRequired,
+  postID: PropTypes.any.isRequired,
   content: PropTypes.string.isRequired,
   postDate: PropTypes.object.isRequired,
   comments: PropTypes.arrayOf(PropTypes.object).isRequired,

@@ -1,6 +1,6 @@
 import { matchConstants } from "../constants";
 
-export function matches(state = {items: [], match: {master: {}, players: [], description: ''}, total: 0, page: 1}, action) {
+export function matches(state = {items: [], match: {master: {}, team1: {}, team2: {}, star_date: null, description: ''}, total: 0, page: 1}, action) {
   switch (action.type) {
     case matchConstants.GETALL_REQUEST:
       return {

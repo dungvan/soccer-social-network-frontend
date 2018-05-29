@@ -138,7 +138,7 @@ class CommentCard extends Component {
             </IconButton>
           </div>
           <div style={{marginLeft:27, lineHeight:'12px', marginBottom:2, marginTop:-3}}>
-            <div className={classes.favLink}><a >{starCount + " Favorite"}</a>,   <span>{new Date(comment.created_at).toLocaleString()}</span></div>
+            <div className={classes.favLink}><a >{starCount + " Favorite"}</a>,   <span>{new Date(comment.created_at).toLocaleDateString('vi-VN')}</span></div>
           </div>
         </div>
       </div>

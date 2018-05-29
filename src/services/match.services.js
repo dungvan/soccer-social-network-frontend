@@ -1,9 +1,10 @@
 import { authHeader } from '../utils';
+import env from 'env';
 
 export const matchService = {
     getAll,
     getByMaster,
-    getByPlayer,
+    getByUserName,
     getByTeam,
     getOne,
     create,
@@ -31,14 +32,14 @@ function getByMaster(id) {
     return fetch(env.api+'/matches/masters/' + id, requestOptions).then(handleResponse);
 }
 
-function getByPlayer(id) {
+function getByUserName(username) {
     const requestOptions = {
         method: 'GET',
         mode: 'CORS',
         headers: authHeader()
     };
 
-    return fetch(env.api+'/matches/players/' + id, requestOptions).then(handleResponse);
+    return fetch(env.api+'/users/'+username+'/matches', requestOptions).then(handleResponse);
 }
 
 function getByTeam(id) {

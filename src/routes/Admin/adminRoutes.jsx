@@ -1,11 +1,13 @@
 import React from "react";
-import DashboardPage from "views/Dashboard/Dashboard.jsx";
-import UserProfile from "views/UserProfile/UserProfile.jsx";
-import UserList from "views/Admin/UserList/UserList.jsx";
-import PostList from "views/Admin/PostList/PostList.jsx";
-import TeamList from "views/Admin/TeamList/TeamList.jsx";
+import DashboardPage from "views/Dashboard/Dashboard";
+import UserProfile from "views/UserProfile/UserProfile";
+import UserList from "views/Admin/UserList/UserList";
+import PostList from "views/Admin/PostList/PostList";
+import TeamList from "views/Admin/TeamList/TeamList";
 import PostExplore from "views/PostExplore/PostExplore";
 import PostDetail from "views/PostDetail/PostDetail";
+import Logout from "views/Auth/Logout/Logout";
+import MatchExplore from "views/MatchExplore/MatchExplore";
 import { Switch, Route } from "react-router-dom";
 
 import {
@@ -16,8 +18,6 @@ import {
   PowerSettingsNew
 } from "@material-ui/icons";
 import { getCurrentUsername } from "utils";
-import Logout from "../../views/Auth/Logout/Logout";
-import MatchProfile from "../../views/MatchProfile/MatchProfile";
 
 const AdminRoutes = () => {
   return (
@@ -30,7 +30,7 @@ const AdminRoutes = () => {
       <Route exact path="/" component={PostExplore} />
       <Route path="/post/:id" component={PostDetail} />
       <Route path="/logout" component={Logout} />
-      <Route path="/matches" component={MatchProfile} />
+      <Route path="/matches" component={MatchExplore} />
     </Switch>
   );
 }

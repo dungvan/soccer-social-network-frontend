@@ -15,7 +15,9 @@ const styles = theme => ({
     display: 'inline-block',
     maxWidth: 309,
     borderRadius: 10,
-    border: '2px solid #1927d4'
+    border: '2px solid #1927d4',
+    marginTop: 10,
+    marginBottom: 10
   },
   cardHeader: {
     padding: 3
@@ -107,6 +109,13 @@ const styles = theme => ({
   team2Winer: {
     marginTop: -20,
     marginLeft: 260
+  },
+  tournamentTitle: {
+    fontSize: '11px',
+    fontWeight: 'bold'
+  },
+  tournamentInfo: {
+    fontSize: '11px',
   }
 })
 
@@ -118,6 +127,9 @@ class MatchCard extends Component {
   render() {
     const {
       classes,
+      tournament,
+      title,
+      date,
       user,
       avatar,
      } = this.props;
@@ -142,14 +154,33 @@ class MatchCard extends Component {
               <ExpandMore />
             </IconButton>
           }
-          title={<span style={{fontWeight: 'bold', fontSize: '1rem', marginLeft: -10}}>match 11111111111111111111</span>}
-          subheader={new Date().toLocaleDateString()}
+          title={<span style={{fontWeight: 'bold', fontSize: '1rem', marginLeft: -10}}>{title}</span>}
+          subheader={!tournament ? date.toLocaleDateString('vi-VN'):date.toLocaleDateString('vi-VN') + ' ' + tournament.name}
         />
-        <Collapse in={this.state.expanded} timeout="auto" unmountOnExit>
-        <hr className={classes.line} />
-        <CardContent>test</CardContent>
-        <hr className={classes.line} />
-        </Collapse>
+        {tournament &&
+          <Collapse in={this.state.expanded} timeout="auto" unmountOnExit>
+            <hr className={classes.line} />
+            <CardContent>
+              <div>
+                <span className={classes.tournamentTitle}>Tournament Name: </span>
+                <span className={classes.tournamentInfo}>{tournament.name}</span>
+              </div>
+              <div>
+                <span className={classes.tournamentTitle}>Tournament Description: </span>
+                <span className={classes.tournamentInfo}>{tournament.description}</span>
+              </div>
+              <div>
+                <span className={classes.tournamentTitle}>Tournament Start: </span>
+                <span className={classes.tournamentInfo}>{new Date(tournament.start_date).toLocaleDateString('vi-VN')}</span>
+              </div>
+              <div>
+                <span className={classes.tournamentTitle}>Tournament End: </span>
+                <span className={classes.tournamentInfo}>{new Date(tournament.end_date).toLocaleDateString('vi-VN')}</span>
+              </div>
+            </CardContent>
+            <hr className={classes.line} />
+          </Collapse>
+        }
         <CardContent className={classes.cardContent} style={{paddingBottom: 3}} >
           <img src={winner} alt="winner" className={classnames(classes.team2Winer, classes.label)} />
           <div className={classnames(classes.left, classes.lose)}>
@@ -170,6 +201,8 @@ class MatchCard extends Component {
 
 MatchCard.protoTypes = {
   user: PropTypes.object.isRequired,
+  title: PropTypes.string.isRequired,
+  date: PropTypes.object.isRequired
 }
 
 export default withStyles(styles)(MatchCard);

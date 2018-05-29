@@ -138,7 +138,7 @@ class HeaderLinks extends React.Component {
           </Popper>
           }
         </Manager>
-        <NavLink to={"/admin/user/"+getCurrentUsername()}>
+        <NavLink to={"/user/"+getCurrentUsername()}>
         <IconButton
           color="inherit"
           aria-label="Person"

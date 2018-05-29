@@ -54,12 +54,6 @@ export class PostList extends Component {
     this.props.getAll(this.state.page + 1)
   }
 
-  _dateTimeString(date) {
-    date = new Date(date)
-    let dateTimeString = date.toString().substring(0,33)
-    return dateTimeString
-  }
-
   _confirmDelete = ()=> {
     if (!!this.delID) {
       this.props.delete(this.delID);
@@ -109,7 +103,7 @@ export class PostList extends Component {
                           <TableCell>{
                             post.caption.length < 37 ? post.caption : (post.caption.substring(0,26) + '...')
                           }</TableCell>
-                          <TableCell>{this._dateTimeString(post.created_at)}</TableCell>
+                          <TableCell>{new Date(post.created_at).toLocaleDateString('vi-VN')}</TableCell>
                           <TableCell>
                             <IconButton size="small" color="secondary" onClick={this.handleDelete.bind(this, post.id)}><Delete /></IconButton>
                           </TableCell>

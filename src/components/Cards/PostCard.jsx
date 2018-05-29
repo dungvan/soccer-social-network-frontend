@@ -254,7 +254,7 @@ class PostCard extends React.Component {
               </div>
             }
             title={<span style={{fontWeight: 'bold'}}>{user.user_name}</span>}
-            subheader={postDate.toLocaleString()}
+            subheader={postDate.toLocaleDateString('vi-VN')}
           />
           {
             !!mediaImages &&

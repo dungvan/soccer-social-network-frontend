@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import classnames from 'classnames';
 import { withStyles } from 'material-ui/styles';
 import { Card, CardContent, CardHeader, IconButton } from 'material-ui';
@@ -6,12 +7,14 @@ import Collapse from 'material-ui/transitions/Collapse';
 import PropTypes from 'prop-types';
 import Avatar from 'material-ui/Avatar';
 import {
-  ExpandMore
+  ExpandMore,
+  Check
 } from '@material-ui/icons';
 import winner from 'assets/img/winner.png';
 import draw from 'assets/img/draw.png';
 import { getCurrentUsername } from 'utils';
 import { isNil } from 'lodash';
+import { matchActions } from 'actions';
 
 const styles = theme => ({
   card: {
@@ -93,6 +96,14 @@ const styles = theme => ({
     marginRight: 16,
     marginTop: 8
   },
+  check: {
+    color: 'green',
+    marginRight: 5,
+    marginTop: 8
+  },
+  hiddenCheck: {
+    display: 'none'
+  },
   expandOpen: {
     transform: 'rotate(180deg)',
   },
@@ -132,10 +143,22 @@ const styles = theme => ({
 })
 
 class MatchCard extends Component {
-  state = {expanded: false}
+  state = {expanded: false, team1_goals: this.props.goals[1], team2_goals: this.props.goals[2], goalsChanged: false}
   status = 'none'
   handleExpandClick = () => {
     this.setState({expanded: !this.state.expanded})
+  }
+  handleChangeTeam1Goals = (e) => {
+    this.setState({team1_goals: e.target.value, goalsChanged: true})
+  }
+  handleChangeTeam2Goals = (e) => {
+    this.setState({team2_goals: e.target.value, goalsChanged: true})
+  }
+  handleSubmitGoals = () => {
+    if (this.state.goalsChanged) {
+      this.props.update({id: this.props.matchID, team1_goals: this.state.team1_goals, team2_goals: this.state.team2_goals})
+    }
+    this.setState({goalsChanged: false, expanded: false})
   }
   render() {
     const {
@@ -146,8 +169,8 @@ class MatchCard extends Component {
       user,
       avatar,
       team,
-      updateScore,
-      goals
+      goals,
+      goalsEditable,
     } = this.props;
     this.status = (!isNil(goals[1]) && !isNil(goals[2])) ? (goals[1] > goals[2] ? 'win':(goals[1] !== goals[2] ? 'lose':'draw')):'none'
     return (
@@ -160,16 +183,29 @@ class MatchCard extends Component {
             </Avatar>
           }
           action={
-            <IconButton
-              className={classnames(classes.iconExpand, classes.expand, {
-                [classes.expandOpen]: this.state.expanded,
-              })}
-              onClick={this.handleExpandClick}
-              aria-expanded={this.state.expanded}
-              aria-label="Show more"
-            >
-              <ExpandMore />
-            </IconButton>
+            <div>
+              {
+                this.state.expanded && goalsEditable &&
+                <IconButton
+                  className={classnames(classes.iconExpand, classes.check)}
+                  onClick={this.handleSubmitGoals}
+                  aria-expanded={this.state.expanded}
+                  aria-label="Show more"
+                >
+                  <Check />
+                </IconButton>
+              }
+              <IconButton
+                className={classnames(classes.iconExpand, classes.expand, {
+                  [classes.expandOpen]: this.state.expanded,
+                })}
+                onClick={this.handleExpandClick}
+                aria-expanded={this.state.expanded}
+                aria-label="Show more"
+              >
+                <ExpandMore />
+              </IconButton>
+            </div>
           }
           title={<span style={{fontWeight: 'bold', fontSize: '1rem', marginLeft: -10}}>{title}</span>}
           subheader={!tournament ? date.toLocaleDateString('vi-VN'):date.toLocaleDateString('vi-VN') + ' ' + tournament.name}
@@ -208,15 +244,15 @@ class MatchCard extends Component {
           <div className={classnames(classes.left, this.status === 'win'? classes.win : (this.status === 'lose' ? classes.lose :classes.goalsEqual))}>
             <span className={classes.teamName}>{team[1].name}</span>
             {this.state.expanded &&
-              (!updateScore ?
-                <span className={classes.score}>{goals[1]}</span>:<input type="number" className={classes.score} style={{marginLeft:30, width:75, height:50, paddingLeft:10, paddingTop:10}}/>
+              (!goalsEditable ?
+                <span className={classes.score}>{goals[1]}</span>:<input type="number" value={this.state.team1_goals} onChange={this.handleChangeTeam1Goals.bind(this)} className={classes.score} style={{marginLeft:30, width:75, height:50, paddingLeft:10, paddingTop:10}}/>
               )}
           </div>
           <div className={classnames(classes.right, this.status === 'win'? classes.lose : (this.status === 'lose' ? classes.win :classes.goalsEqual))}>
             <span className={classes.teamName}>{team[2].name}</span>
             {this.state.expanded &&
-              (!updateScore ?
-                <span className={classes.score}>{goals[2]}</span>:<input type="number" className={classes.score} style={{marginLeft:30, width:75, height:50, paddingLeft:10, paddingTop:10}}/>
+              (!goalsEditable ?
+                <span className={classes.score}>{goals[2]}</span>:<input type="number" value={this.state.team2_goals} onChange={this.handleChangeTeam2Goals.bind(this)} className={classes.score} style={{marginLeft:30, width:75, height:50, paddingLeft:10, paddingTop:10}}/>
               )}
           </div>
         </CardContent>
@@ -231,6 +267,14 @@ MatchCard.protoTypes = {
   date: PropTypes.object.isRequired,
   team: PropTypes.object.isRequired,
   goals: PropTypes.object.isRequired,
+  goalsEditable: PropTypes.bool,
+  matchID: PropTypes.any.isRequired
 }
 
-export default withStyles(styles)(MatchCard);
+const mapStateToProps = (state) => {
+  return {}
+}
+
+export default connect(mapStateToProps, {
+  update: matchActions.update
+})(withStyles(styles)(MatchCard));

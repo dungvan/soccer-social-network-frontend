@@ -18,6 +18,7 @@ import {
   PowerSettingsNew
 } from "@material-ui/icons";
 import { getCurrentUsername } from "utils";
+import Match from "views/Manager/Match/Match";
 
 const AdminRoutes = () => {
   return (
@@ -31,6 +32,7 @@ const AdminRoutes = () => {
       <Route path="/post/:id" component={PostDetail} />
       <Route path="/logout" component={Logout} />
       <Route path="/matches" component={MatchExplore} />
+      <Route path="/managers/matches" component={Match} />
     </Switch>
   );
 }

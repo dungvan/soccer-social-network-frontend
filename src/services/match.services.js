@@ -22,14 +22,14 @@ function getAll(page) {
     return fetch(env.api+'/matches?page=' + page, requestOptions).then(handleResponse);
 }
 
-function getByMaster(id) {
+function getByMaster() {
     const requestOptions = {
         method: 'GET',
         mode: 'CORS',
         headers: authHeader()
     };
 
-    return fetch(env.api+'/matches/masters/' + id, requestOptions).then(handleResponse);
+    return fetch(env.api+'/matches/masters', requestOptions).then(handleResponse);
 }
 
 function getByUserName(username) {
@@ -74,14 +74,15 @@ function create(match) {
 }
 
 function update(match) {
+    console.log(match)
     const requestOptions = {
         method: 'PUT',
         mode: 'CORS',
         headers: authHeader(),
-        body: JSON.stringify(match)
+        body: JSON.stringify({team1_goals: Number(match.team1_goals), team2_goals: Number(match.team2_goals)})
     }
 
-    return fetch(env.api+'/matches', requestOptions).then(handleResponse);
+    return fetch(env.api+'/matches/'+match.id, requestOptions).then(handleResponse);
 }
 
 function _delete(id) {

@@ -5,12 +5,12 @@ import { actions } from './';
 export const matchActions = {
   create,
   getAll,
-  getByUserName,
+  getBymatchName,
+  getByMaster,
   getOne,
   update,
   delete: _delete
 };
-
 
 function create(match) {
   return dispatch => {
@@ -56,20 +56,40 @@ function getAll(page) {
   };
 }
 
-function getByUserName(username) {
+function getBymatchName(matchname) {
   return dispatch => {
-    dispatch(actions.request(matchConstants.GETBY_USERID_REQUEST, {user_name: username}));
-    matchService.getByUserName(username)
+    dispatch(actions.request(matchConstants.GETBY_matchNAME_REQUEST, {match_name: matchname}));
+    matchService.getBymatchName(matchname)
     .then(
-      data => dispatch(actions.success(matchConstants.GETBY_USERID_SUCCESS, data)),
+      data => dispatch(actions.success(matchConstants.GETBY_matchNAME_SUCCESS, data)),
       error => {
         console.log(error)
         if (error.bodyUsed) {
           error.data.then(error => {
-            dispatch(actions.failure(matchConstants.GETBY_USERID_FAILURE, error, null));
+            dispatch(actions.failure(matchConstants.GETBY_matchNAME_FAILURE, error, null));
           });
         } else {
-          dispatch(actions.failure(matchConstants.GETBY_USERID_FAILURE, {message: error.message, errors: null}, null));
+          dispatch(actions.failure(matchConstants.GETBY_matchNAME_FAILURE, {message: error.message, errors: null}, null));
+        }
+      }
+    );
+  }
+}
+
+function getByMaster() {
+  return dispatch => {
+    dispatch(actions.request(matchConstants.GETBY_MASTER_REQUEST));
+    matchService.getByMaster()
+    .then(
+      data => dispatch(actions.success(matchConstants.GETBY_MASTER_SUCCESS, data)),
+      error => {
+        console.log(error)
+        if (error.bodyUsed) {
+          error.data.then(error => {
+            dispatch(actions.failure(matchConstants.GETBY_MASTER_FAILURE, error, null));
+          });
+        } else {
+          dispatch(actions.failure(matchConstants.GETBY_MASTER_FAILURE, {message: error.message, errors: null}, null));
         }
       }
     );
@@ -83,20 +103,20 @@ function getOne(id){
   }
 }
 
-function update(user) {
+function update(match) {
   return dispatch => {
-    dispatch(actions.request(matchConstants.UPDATE_REQUEST, {user}))
-    matchService.update(user)
+    dispatch(actions.request(matchConstants.UPDATE_REQUEST, {match}))
+    matchService.update(match)
       .then(
-        user => dispatch(actions.success(matchConstants.UPDATE_SUCCESS, {user})),
+        resp => dispatch(actions.success(matchConstants.UPDATE_SUCCESS, {id: match.id, team1_goals: Number(match.team1_goals), team2_goals: Number(match.team2_goals)})),
         error => {
           console.log(error)
           if (error.bodyUsed) {
             error.data.then(error => {
-              dispatch(actions.failure(matchConstants.UPDATE_FAILURE, error, {user}));
+              dispatch(actions.failure(matchConstants.UPDATE_FAILURE, error, {id: match.id, team1_goals: match.team1_goals, team2_goals: match.team2_goals}));
             });
           } else {
-            dispatch(actions.failure(matchConstants.UPDATE_FAILURE, {message: error.message, errors: null}, {user}));
+            dispatch(actions.failure(matchConstants.UPDATE_FAILURE, {message: error.message, errors: null}, {id: match.id, team1_goals: match.team1_goals, team2_goals: match.team2_goals}));
           }
         }
       )
@@ -110,7 +130,7 @@ function _delete(id) {
 
     matchService.delete(id)
       .then(
-        user => {
+        match => {
           dispatch(actions.success(matchConstants.DELETE_SUCCESS, {id}));
         },
         error => {

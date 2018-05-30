@@ -116,7 +116,7 @@ class PostExplore extends Component {
                 optimisticPreviews={true}
                 multiple={true}
                 inputId="image_files"
-                url={env.url+"/posts/images"}
+                url={env.api+"/posts/images"}
                 headers= {authHeader()}
                 onLoadStart={()=>{this.setState({disablePost:true, disableSubmit: true})}}
                 onLoadEnd={(err, resp) => {

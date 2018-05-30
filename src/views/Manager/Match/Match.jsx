@@ -5,9 +5,9 @@ import { MatchCard, ItemGrid } from 'components';
 import { Grid } from 'material-ui';
 import { matchActions } from 'actions';
 
-class MatchExplore extends Component {
+class Match extends Component {
 	componentWillMount() {
-    this.props.getAll(1)
+    this.props.getByMaster()
 	}
 	render () {
 		const { items } = this.props;
@@ -27,6 +27,7 @@ class MatchExplore extends Component {
                   tournament={match.tournament}
                   team={{1: match.team1, 2:match.team2}}
                   goals={{1: match.team1_goals, 2: match.team2_goals}}
+                  goalsEditable
                 />
               );
             })
@@ -43,5 +44,5 @@ const mapStateToProps = (state) => {
 }
 
 export default connect(mapStateToProps, {
-	getAll: matchActions.getAll
-})(MatchExplore)
+	getByMaster: matchActions.getByMaster
+})(Match)

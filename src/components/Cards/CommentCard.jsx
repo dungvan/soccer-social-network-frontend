@@ -1,11 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { withStyles } from 'material-ui/styles';
+import { withStyles, Avatar, IconButton, Typography } from '@material-ui/core';
 import classnames from 'classnames';
-import Avatar from 'material-ui/Avatar';
-import IconButton from 'material-ui/IconButton';
-import Typography from 'material-ui/Typography';
-import red from 'material-ui/colors/red';
+import { red } from '@material-ui/core/colors';
 import {
   Close,
   Star,

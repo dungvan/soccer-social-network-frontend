@@ -67,7 +67,12 @@ function create(match) {
         method: 'POST',
         mode: 'CORS',
         headers: authHeader(),
-        body: JSON.stringify(match)
+        body: JSON.stringify({
+            description: match.description,
+            start_date: match.start_date,
+            team1_id: match.team1.id,
+            team2_id: match.team2.id
+        })
     };
 
     return fetch(env.api+'/matches', requestOptions).then(handleResponse);

@@ -1,9 +1,9 @@
 import React from "react";
 import { LoginForm } from "./Login/login";
-import { Grid } from "material-ui";
+import { Grid } from "@material-ui/core";
 import { RegisterForm } from "./Register/register";
 import { ItemGrid } from "components";
-import { withStyles } from 'material-ui/styles';
+import { withStyles } from '@material-ui/core';
 
 const styles = theme => ({
   progress: {

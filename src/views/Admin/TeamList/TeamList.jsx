@@ -12,7 +12,7 @@ import {
   TableBody,
   TableCell,
   TableFooter
-} from "material-ui";
+} from "@material-ui/core";
 
 import {
   Delete,
@@ -20,7 +20,7 @@ import {
 import { withSwalInstance } from 'sweetalert2-react';
 import swal from 'sweetalert2';
 import "assets/jss/material-dashboard-react/tableStyle";
-import { TablePagination } from "material-ui";
+import { TablePagination } from "@material-ui/core";
 import { alertConstants } from "../../../constants";
 
 const SweetAlert = withSwalInstance(swal);

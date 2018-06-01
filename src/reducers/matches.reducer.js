@@ -1,7 +1,26 @@
 import { matchConstants } from "../constants";
+import { getCurrentUser } from "../utils";
 
 export function matches(state = {items: [], match: {master: {}, team1: {}, team2: {}, star_date: null, description: ''}, total: 0, page: 1}, action) {
   switch (action.type) {
+    case matchConstants.CREATE_REQUEST:
+      return {
+        ...state,
+        loading: true
+      }
+    case matchConstants.CREATE_SUCCESS:
+      console.log(action)
+      return {
+        ...state,
+        total: state.total + 1,
+        items: [{id: action.data.resp.match_id, master: getCurrentUser(), ...action.data.match}, ...state.items],
+        loading: true
+      }
+    case matchConstants.CREATE_FAILURE:
+      return {
+        ...state,        
+        loading: false
+      };
     case matchConstants.GETALL_REQUEST:
       return {
         ...state,
@@ -66,7 +85,6 @@ export function matches(state = {items: [], match: {master: {}, team1: {}, team2
       loading: true
     }
     case matchConstants.UPDATE_SUCCESS:
-    console.log(...state.items.filter(match=>match.id!==action.data.id))
       return {
         ...state,
         items: [

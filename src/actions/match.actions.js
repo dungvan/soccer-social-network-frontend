@@ -5,7 +5,7 @@ import { actions } from './';
 export const matchActions = {
   create,
   getAll,
-  getBymatchName,
+  getByUserName,
   getByMaster,
   getOne,
   update,
@@ -19,7 +19,7 @@ function create(match) {
     matchService.create(match)
       .then(
         resp => {
-          dispatch(actions.success(matchConstants.CREATE_SUCCESS, {match}));
+          dispatch(actions.success(matchConstants.CREATE_SUCCESS, {match, resp}));
         },
         error => {
           console.log(error)
@@ -56,20 +56,20 @@ function getAll(page) {
   };
 }
 
-function getBymatchName(matchname) {
+function getByUserName(username) {
   return dispatch => {
-    dispatch(actions.request(matchConstants.GETBY_matchNAME_REQUEST, {match_name: matchname}));
-    matchService.getBymatchName(matchname)
+    dispatch(actions.request(matchConstants.GETBY_USERNAME_REQUEST, {user_name: username}));
+    matchService.getByUserName(username)
     .then(
-      data => dispatch(actions.success(matchConstants.GETBY_matchNAME_SUCCESS, data)),
+      data => dispatch(actions.success(matchConstants.GETBY_USERNAME_SUCCESS, data)),
       error => {
         console.log(error)
         if (error.bodyUsed) {
           error.data.then(error => {
-            dispatch(actions.failure(matchConstants.GETBY_matchNAME_FAILURE, error, null));
+            dispatch(actions.failure(matchConstants.GETBY_USERNAME_FAILURE, error, null));
           });
         } else {
-          dispatch(actions.failure(matchConstants.GETBY_matchNAME_FAILURE, {message: error.message, errors: null}, null));
+          dispatch(actions.failure(matchConstants.GETBY_USERNAME_FAILURE, {message: error.message, errors: null}, null));
         }
       }
     );

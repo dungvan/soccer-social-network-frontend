@@ -4,7 +4,7 @@ import {connect} from 'react-redux';
 import validator from 'validator';
 import { isEmpty } from 'lodash';
 import { actions, userActions } from 'actions';
-import { Grid } from "material-ui";
+import { Grid } from "@material-ui/core";
 import {
   RegularCard,
   Button,

@@ -1,17 +1,17 @@
 import React, { Component } from 'react';
 import { PostCard, ItemGrid } from 'components';
-import { Grid, Input, Button, Radio, RadioGroup, FormControlLabel } from 'material-ui';
+import { Grid, Input, Button, Radio, RadioGroup, FormControlLabel, Card, CardHeader, CardContent } from "@material-ui/core";
 import { postActions, commentActions } from 'actions';
 import { connect } from 'react-redux';
-import { authHeader, getCurrentUsername } from '../../utils';
-import Card, { CardHeader, CardContent } from 'material-ui/Card';
+import { authHeader, getCurrentUsername } from 'utils';
 import ImagesUploader from 'react-images-uploader';
 import 'react-images-uploader/styles.css';
 import 'react-images-uploader/font.css';
 import env from 'env';
 
 class PostExplore extends Component {
-  state = {createType: 'status', disablePost: false, caption: "", openImageUpload: false, rows: 1, disableSubmit: false, image_names:[]}
+  state = {createType: 'status', disablePost: false, caption: "", openImageUpload: false, rows: 1, disableSubmit: false, image_names:[], disabledImageUpload: false}
+  image_urls = []
   handleSubmitComment = (cmt) => {
     this.props.submitComment(cmt)
   }
@@ -26,9 +26,9 @@ class PostExplore extends Component {
     const hashtags = this._findHashtags(this.state.caption);
     const { caption, createType } = this.state;
     const image_names = this.state.image_names;
-    console.log({caption, type: createType, hashtags, image_names})
-    this.props.create({caption, type: createType, hashtags, image_names});
-    this.setState({caption: ''})
+    const image_urls = this.image_urls;
+    this.props.create({caption, type: createType, hashtags, image_names, image_urls});
+    this.setState({caption: '', disabledImageUpload: true, openImageUpload: false})
   }
 
   handlePostChange = (e) => {
@@ -107,41 +107,43 @@ class PostExplore extends Component {
                 disabled={this.state.disablePost}
                 placeholder={"What's on your mind," + getCurrentUsername() + "?"}
                 onChange={this.handlePostChange}
-                onFocus={()=>{this.setState({openImageUpload: true, rows: 5})}}
+                onFocus={()=>{this.setState({openImageUpload: true, rows: 5, disabledImageUpload: false})}}
                 onBlur={()=>{this.setState({rows: 1})}}
               />
               {
                 this.state.openImageUpload &&
                 <ImagesUploader
-                optimisticPreviews={true}
-                multiple={true}
-                inputId="image_files"
-                url={env.api+"/posts/images"}
-                headers= {authHeader()}
-                onLoadStart={()=>{this.setState({disablePost:true, disableSubmit: true})}}
-                onLoadEnd={(err, resp) => {
+                  disabled={this.state.disabledImageUpload}
+                  optimisticPreviews={true}
+                  multiple={true}
+                  inputId="image_files"
+                  url={env.api+"/posts/images"}
+                  headers= {authHeader()}
+                  onLoadStart={()=>{this.setState({disablePost:true, disableSubmit: true})}}
+                  onLoadEnd={(err, resp) => {
                     if (err) {
                         console.error(err);
                         return
                     }
-                    let imageNames = []
+                    let imageNames = [];
+                    this.image_urls = resp;
                     resp.map((url, index)=>{
-                      return imageNames[index] = url.replace(env.s3Endpoint,"")
+                      return imageNames[index] = url.replace(env.s3Endpoint,"");
                     })
-                    this.setState({disablePost:false, disableSubmit: false, image_names: imageNames})
-                }}
-                deleteImage={
-                  (index)=> {
-                    let images = this.state.image_names.splice(index,1)
-                    if (images.length === 0) {
-                      this.setState({image_names: [], disableSubmit: true})
-                    } else {
-                      this.setState({image_names: [], disableSubmit: false})
+                    this.setState({disablePost:false, disableSubmit: false, image_names: imageNames});
+                  }}
+                  deleteImage={
+                    (index)=> {
+                      let images = this.state.image_names.splice(index,1)
+                      if (images.length === 0) {
+                        this.setState({image_names: [], disableSubmit: true})
+                      } else {
+                        this.setState({image_names: [], disableSubmit: false})
+                      }
                     }
                   }
-                }
-                label="Upload multiple images"
-              />
+                  label="Upload multiple images"
+                />
               }
               {
                 ((this.state.caption !== '') || (this.state.image_names.length !== 0))&&
@@ -173,6 +175,7 @@ class PostExplore extends Component {
                 onSubmitComment={this.handleSubmitComment}
                 onSubmitUpdatePost={this.handleSubmitUpdatePost}
                 onSubmitDeletePost={this.handleDeletePost}
+                history={this.props.history}
               />
               );
             })

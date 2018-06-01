@@ -14,7 +14,7 @@ import {
   TableCell,
   TableFooter,
   TablePagination
-} from "material-ui";
+} from "@material-ui/core";
 
 import {
   Delete,

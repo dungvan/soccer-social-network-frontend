@@ -7,6 +7,7 @@ export const userActions = {
   logout,
   register,
   getAll,
+  searchUser,
   update,
   getByUsername,
   delete: _delete
@@ -67,6 +68,13 @@ function getAll(page) {
           }
         }
       );
+  };
+}
+
+function searchUser(page, search, ignoresUser) {
+  return dispatch => {
+    dispatch(actions.request(userConstants.GETALL_REQUEST, {page}));
+    userService.getAll(page, search, ignoresUser)
   };
 }
 

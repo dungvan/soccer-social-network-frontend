@@ -1,15 +1,20 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { withStyles } from 'material-ui/styles';
+import {
+  withStyles,
+  IconButton,
+  Avatar,
+  Card,
+  CardHeader,
+  CardContent,
+  CardActions,
+  Input,
+  Typography,
+  Popover
+} from '@material-ui/core';
 import classnames from 'classnames';
-import Card, { CardHeader, CardContent, CardActions } from 'material-ui/Card';
-import { Input } from 'material-ui';
-import Collapse from 'material-ui/transitions/Collapse';
-import Avatar from 'material-ui/Avatar';
-import IconButton from 'material-ui/IconButton';
-import Typography from 'material-ui/Typography';
-import Popover from 'material-ui/Popover';
-import red from 'material-ui/colors/red';
+import Collapse from '@material-ui/core/Collapse';
+import { red } from '@material-ui/core/colors';
 import ImageGridList from '../GridList/ImageGridList';
 import CommentCard from './CommentCard.jsx';
 import {
@@ -18,8 +23,8 @@ import {
   ExpandMore,
   MoreVert
 } from '@material-ui/icons';
-import { postService } from '../../services';
-import { isCurrentUser } from '../../utils';
+import { postService } from 'services';
+import { isCurrentUser } from 'utils';
 
 const styles = theme => ({
   postCard: {
@@ -59,7 +64,7 @@ const styles = theme => ({
     }
   },
   avatarContent: {
-    paddingTop: 3
+    paddingTop: 3,
   },
   cardComment: {
     display: 'flex',
@@ -120,6 +125,17 @@ const styles = theme => ({
     marginTop: 2,
     fontSize: 13,
     width: 'auto'
+  },
+  titleName: {
+    fontWeight: 'bold',
+    fontSize: '1rem',
+    color: '#365899',
+  },
+  titleUserName: {
+    '&:hover': {
+      cursor: 'pointer',
+      textDecoration: 'underline'
+    }
   }
 });
 
@@ -253,7 +269,7 @@ class PostCard extends React.Component {
               </Popover>
               </div>
             }
-            title={<span style={{fontWeight: 'bold'}}>{user.user_name}</span>}
+            title={<span className={classnames(classes.titleName, classes.titleUserName)} onClick={() => {return this.props.history.push('/user/'+user.user_name)}}>{user.user_name}</span>}
             subheader={postDate.toLocaleDateString('vi-VN')}
           />
           {

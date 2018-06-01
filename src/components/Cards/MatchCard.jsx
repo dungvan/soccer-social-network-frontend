@@ -1,18 +1,15 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import classnames from 'classnames';
-import { withStyles } from 'material-ui/styles';
-import { Card, CardContent, CardHeader, IconButton } from 'material-ui';
-import Collapse from 'material-ui/transitions/Collapse';
+import { withStyles, Card, CardContent, CardHeader, IconButton, Avatar } from '@material-ui/core';
+import Collapse from '@material-ui/core/Collapse';
 import PropTypes from 'prop-types';
-import Avatar from 'material-ui/Avatar';
 import {
   ExpandMore,
   Check
 } from '@material-ui/icons';
 import winner from 'assets/img/winner.png';
 import draw from 'assets/img/draw.png';
-import { getCurrentUsername } from 'utils';
 import { isNil } from 'lodash';
 import { matchActions } from 'actions';
 
@@ -23,7 +20,11 @@ const styles = theme => ({
     borderRadius: 10,
     border: '2px solid #1927d4',
     marginTop: 10,
-    marginBottom: 10
+    marginBottom: 10,
+    backgroundColor: '#fafafa',
+  },
+  cardActive: {
+    backgroundColor: 'pink'
   },
   cardHeader: {
     padding: 3
@@ -139,6 +140,17 @@ const styles = theme => ({
   draw: {
     marginTop: -20,
     marginLeft: 120
+  },
+  titleName: {
+    fontWeight: 'bold',
+    fontSize: '1rem',
+    color: '#365899',
+  },
+  titleUserName: {
+    '&:hover': {
+      cursor: 'pointer',
+      textDecoration: 'underline'
+    }
   }
 })
 
@@ -171,14 +183,15 @@ class MatchCard extends Component {
       team,
       goals,
       goalsEditable,
+      onClick
     } = this.props;
     this.status = (!isNil(goals[1]) && !isNil(goals[2])) ? (goals[1] > goals[2] ? 'win':(goals[1] !== goals[2] ? 'lose':'draw')):'none'
     return (
-      <Card className={classes.card}>
+      <Card className={classes.card} onClick={onClick}>
         <CardHeader
           className={classes.cardHeader}
           avatar={
-            <Avatar aria-label="Recipe" className={classes.avatar} onClick={() => {return this.props.history.push('/user/'+getCurrentUsername())}}>
+            <Avatar aria-label="Recipe" className={classes.avatar} onClick={() => {return this.props.history.push('/user/'+user.user_name)}}>
                 {!!avatar ? <img src={avatar} alt="avatar" /> : <span className={classes.avatarContent}>{user.user_name.substring(0,1).toUpperCase()}</span>}
             </Avatar>
           }
@@ -207,7 +220,7 @@ class MatchCard extends Component {
               </IconButton>
             </div>
           }
-          title={<span style={{fontWeight: 'bold', fontSize: '1rem', marginLeft: -10}}>{title}</span>}
+          title={<span className={classes.titleName}>{title}</span>}
           subheader={!tournament ? date.toLocaleDateString('vi-VN'):date.toLocaleDateString('vi-VN') + ' ' + tournament.name}
         />
         {tournament &&

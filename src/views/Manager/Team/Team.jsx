@@ -1,19 +1,24 @@
+
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { MatchCard, ItemGrid, TeamCard, AsynSelectWrapped } from 'components';
+import classnames from 'classnames';
+import { ItemGrid, AsynSelectWrapped } from 'components';
 import {
-  Grid,
   withStyles,
+  Grid,
   Card,
   CardHeader,
   CardContent,
-  TextField,
   Button,
-  Avatar
+  TextField,
+  Avatar,
 } from '@material-ui/core';
-import { matchActions } from 'actions';
+import { teamActions } from 'actions';
+import { TeamCard } from 'components';
+import 'react-select/dist/react-select.css';
 import { isEmpty } from 'lodash';
-import { teamService } from '../../../services';
+import { userActions } from 'actions';
+import { userService } from '../../../services';
 
 const ITEM_HEIGHT = 48;
 
@@ -155,29 +160,31 @@ const styles = theme => ({
   },
 });
 
-
-class Match extends Component {
-  state = {team1: null, team2: null, teamCreate: [], descriptionCreate: '', dateStartCreate: new Date().toLocaleDateString()}
+class Team extends Component {
+  state = {users: [], teamName: '', teamDescription: ''}
 
 	componentWillMount() {
     this.props.getByMaster()
   }
 
-  handleTypeTeamChange = (value) => {
-    this.setState({teamCreate: value})
-  }
+  handleTypeUserChange = value => {
+    this.setState({
+      users: value,
+    });
+  };
 
-  handleShowTeamName = (index) => {
-    let {team1, team2} = this.props.items[index]
-    this.setState({team1, team2})
-  }
+  handlePositionSelectChange = (index, event) => {
+    var users = this.state.users
+    users[index].position = event.target.value
+    this.setState({ users });
+  };
 
   getOptions = (input) => {
     if (!input) {
 			return Promise.resolve({ options: [] });
 		}
-    return teamService.getAll(1, input).then(data => {
-      return {options: data.teams}
+    return userService.getAll(1, input, []).then(data => {
+      return {options: data.users.filter((user) => {user.position = 'any'; return user})}
     })
   }
 
@@ -186,49 +193,55 @@ class Match extends Component {
       <CardHeader
         avatar={
           <Avatar aria-label="Recipe" style={{width:30, height:30}}>
-            {!!option.avatar ? <img src={option.avatar} alt="avatar" /> : <span style={{ marginTop: 2.5, fontWeight: 'bold', fontSize: '18px'}}>{option.master.user_name.substring(0,1).toUpperCase()}</span>}
+            {!!option.avatar ? <img src={option.avatar} alt="avatar" /> : <span style={{ marginTop: 2.5, fontWeight: 'bold', fontSize: '18px'}}>{option.user_name.substring(0,1).toUpperCase()}</span>}
           </Avatar>
         }
         title={
-          <span style={{ fontWeight: 'bold', fontSize: '18px'}} >{option.name}<span style={{color: '#717171', marginLeft: 100, fontSize: '14px', fontWeight: 'nomal'}}>{option.master.user_name}</span></span>
+          <span style={{ fontWeight: 'bold', fontSize: '18px'}} >{option.user_name}<span style={{color: '#717171', marginLeft: 100, fontSize: '14px', fontWeight: 'nomal'}}>{option.email}</span></span>
         }
       />
     );
   }
 
-  _dateString(date) {
-    let dateString = "1990-01-01";
-    if (!!date) {
-      date = new Date(date)
-      const day = date.getDate();
-      let dayString = day < 10 ? ("0"+day):day;
-      const month = date.getMonth()+1;
-      let monthString = month < 10 ? ("0"+month):month;
-      dateString = date.getFullYear()+"-"+ monthString+"-"+dayString;
-    } 
-    return dateString
-  }
-
 	render () {
-    const { items, classes } = this.props;
+		const { items, classes } = this.props;
     return (
       <Grid container>
-      <ItemGrid xs={12} sm={12} md={4}>
-          <Card style={{maxWidth: 700, minHeight: 320,marginTop: 10, width: 309}}>
+        <ItemGrid xs={12} sm={12} md={8}>
+          <Card style={{maxWidth: 700, minHeight: 400,marginTop: 10}}>
             <CardHeader
               style={{backgroundColor: '#f1f1f1'}}
               title={
-                <span style={{fontWeight: 'bold', color:'#365899'}}>Let's Create A Match</span>
+                <span style={{fontWeight: 'bold', color:'#365899'}}>Let's Create A Team</span>
               }
             />
             <CardContent>
+              <div style={{display: 'flex'}}>  
+                <TextField
+                  style={{marginBottom: 20, display: 'inline-block', width: 200, marginLeft: 20}}
+                  fullWidth
+                  label={"Name"}
+                  placeholder={"Your Team Name"}
+                  value={this.state.teamName}
+                  onChange={(event)=>{this.setState({teamName: event.target.value})}}
+                />
+                <TextField
+                  style={{marginBottom: 20, display: 'inline-block', marginLeft: 20, marginRight: 20}}
+                  fullWidth
+                  multiline
+                  label={"Team Description"}
+                  placeholder={"Explain Your Team"}
+                  value={this.state.teamDescription}
+                  onChange={(event)=>{this.setState({teamDescription: event.target.value})}}
+                />
+              </div>
               <div className={classes.root} style={{display: 'flex'}}>
                 <TextField
                   style={{marginBottom: 20, display: 'inline-block', marginLeft: 20, marginRight: 20}}
                   fullWidth
                   placeholder={null}
                   name="react-select-chip-label"
-                  label="Select Two Team"
+                  label="Select Multiple Players"
                   InputLabelProps={{
                     shrink: true
                   }}
@@ -236,58 +249,54 @@ class Match extends Component {
                     inputComponent: AsynSelectWrapped,
                     inputProps: {
                       classes,
-                      value:this.state.teamCreate,
-                      onChange:this.handleTypeTeamChange,
+                      value:this.state.users,
+                      onChange:this.handleTypeUserChange,
                       multi: true,
-                      ignoreCase: false,
                       instanceId: 'react-select-chip-label',
                       id: 'react-select-chip-label',
                       loadOptions: this.getOptions,
                       valueKey: 'id',
-                      labelKey: 'name',
+                      labelKey: 'user_name',
                       optionRenderer: this.renderOption
                     },
                   }}
                 />
               </div>
-              <TextField
-                style={{marginBottom: 20, marginLeft: 20, maxWidth: 220}}
-                fullWidth
-                multiline
-                label={"Match Description"}
-                placeholder={"Explain The Match"}
-                value={this.state.descriptionCreate}
-                onChange={(event)=>{this.setState({descriptionCreate: event.target.value})}}
-              />
-              <TextField
-                style={{marginBottom: 20, marginLeft: 20, maxWidth: 220}}
-                fullWidth
-                multiline
-                label={"Date Start"}
-                InputLabelProps={{
-                  shrink: true
-                }}
-                placeholder={"Explain The Match"}
-                InputProps={{
-                  inputComponent: 'input',
-                  inputProps: {
-                    type: 'date'
-                  },
-                  value: this._dateString(this.state.dateStartCreate),
-                  onChange: (event)=>{this.setState({dateStartCreate: event.target.value})}
-                }}
-              />
+              <div className={classes.userContainer}>
+              {this.state.users.map((user, index)=>{
+                const position = user.position === 'any'? "any" : user.position
+                return (
+                  <div key={user.id} className={classes.user}>
+                    <span className={classnames(classes.titleName, classes.titleUserName)} onClick={() => {return this.props.history.push('/user/'+user.user_name)}}>{user.user_name}</span>
+                    <select
+                      className={classes.userPosition}
+                      value={position}
+                      onChange={this.handlePositionSelectChange.bind(this, index)}
+                      name="position"
+                    >
+                      <option value={'any'}>any</option>
+                      <option value={'goalkeeper'}>goalkeeper</option>
+                      <option value={'back'}>back</option>
+                      <option value={'defender'}>defender</option>
+                      <option value={'midfielder'}>midfilder</option>
+                      <option value={'winger'}>winger</option>
+                      <option value={'stricker'}>stricker</option>
+                    </select>
+                  </div>
+                );
+              })}
+              </div>
               <div>
               <Button
                 color="primary"
-                disabled={this.state.teamCreate.length < 2 || isEmpty(this.state.descriptionCreate) || isEmpty(this.state.dateStartCreate)}
-                onClick={()=> {this.props.createMatch({description: this.state.descriptionCreate, start_date: new Date(this.state.dateStartCreate), team1: this.state.teamCreate[0], team2: this.state.teamCreate[1]})}}
+                disabled={this.state.users.length < 5 || isEmpty(this.state.teamName)}
+                onClick={()=> {this.props.createTeam({players: this.state.users, name: this.state.teamName, description: this.state.teamDescription})}}
               >
               Agree
               </Button>
               <Button
                 color="primary"
-                disabled={this.state.teamCreate.length > 0 || isEmpty(this.state.descriptionCreate)}
+                disabled={this.state.users.length < 1 || isEmpty(this.state.teamName) || isEmpty(this.state.teamName)}
                 onClick={()=>{this.setState({users: [], teamName: '', teamDescription: ''})}}
               >
               Cancle
@@ -296,59 +305,28 @@ class Match extends Component {
             </CardContent>
           </Card>
         </ItemGrid>
-        <ItemGrid xs={12} sm={12} md={8}>
-          <div style={{display: "flex"}}>
-            <ItemGrid xs={12} sm={12} md={6}>
-            {this.state.team1 &&
-              <TeamCard
-                history={this.props.history}
-                team={this.state.team1}
-              />
-            }
-            </ItemGrid>
-            <ItemGrid xs={12} sm={12} md={6}>
-            {this.state.team2 &&
-              <TeamCard
-                history={this.props.history}
-                team={this.state.team2}
-              />
-            }
-            </ItemGrid>
-          </div>
-        </ItemGrid>
-        <div style={{overflow: 'scroll', display: 'block', maxHeight: 400, width: '100%'}}>
-        {
-          items.map((match, index) => {
-            return (
-              <ItemGrid xs={12} sm={12} md={4} key={match.id} style={{display: 'inline-block'}}>
-                <MatchCard
-                  history={this.props.history}
-                  matchID={match.id}
-                  user={match.master}
-                  title={match.description}
-                  date={new Date(match.start_date)}
-                  tournament={match.tournament}
-                  team={{1: match.team1, 2:match.team2}}
-                  goals={{1: match.team1_goals, 2: match.team2_goals}}
-                  goalsEditable
-                  onClick={this.handleShowTeamName.bind(this, index)}
-                />
-              </ItemGrid>
-            );
-          })
-        }
-        </div>
+      {items.map((team, index) => {
+        return (
+          <ItemGrid xs={12} sm={12} md={4} key={team.id}>
+          <TeamCard
+            history={this.props.history}
+            team={team}
+          />
+          </ItemGrid>
+        );
+      })}
       </Grid>
     );
 	}
 }
 
 const mapStateToProps = (state) => {
-  const { items } = state.matches;
+  const { items } = state.teams;
 	return { items }
 }
 
 export default connect(mapStateToProps, {
-  getByMaster: matchActions.getByMaster,
-  createMatch: matchActions.create
-})(withStyles(styles)(Match))
+  getByMaster: teamActions.getByMaster,
+  searchUser: userActions.searchUser,
+  createTeam: teamActions.create
+})(withStyles(styles)(Team))

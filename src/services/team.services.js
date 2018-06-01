@@ -3,31 +3,34 @@ import env from 'env';
 
 export const teamService = {
     getAll,
-    getByUser,
+    getByUserName,
+    getByMaster,
     getOne,
     create,
     update,
     delete: _delete
 };
 
-function getAll(page) {
+function getAll(page, search) {
     const requestOptions = {
         method: 'GET',
         mode: 'CORS',
         headers: authHeader()
     };
-
-    return fetch(env.api+'/teams?page=' + page, requestOptions).then(handleResponse);
+    if (!page) {
+        page = 1
+    }
+    return fetch(env.api+'/teams?page=' + page + '&search='+search, requestOptions).then(handleResponse);
 }
 
-function getByUser(id) {
+function getByMaster() {
     const requestOptions = {
         method: 'GET',
         mode: 'CORS',
         headers: authHeader()
     };
 
-    return fetch(env.api+'/teams/users/' + id, requestOptions).then(handleResponse);
+    return fetch(env.api+'/teams/masters', requestOptions).then(handleResponse);
 }
 
 function getOne(id) {
@@ -49,6 +52,16 @@ function create(team) {
     };
 
     return fetch(env.api+'/teams', requestOptions).then(handleResponse);
+}
+
+function getByUserName(username) {
+    const requestOptions = {
+        method: 'GET',
+        mode: 'CORS',
+        headers: authHeader()
+    };
+
+    return fetch(env.api+'/users/'+username+'/teams', requestOptions).then(handleResponse);
 }
 
 function update(team) {

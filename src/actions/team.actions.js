@@ -5,7 +5,8 @@ import { teamService } from "services";
 export const teamActions = {
   create,
   getAll,
-  getByUserID,
+  getByUserName,
+  getByMaster,
   update,
   delete: _delete
 };
@@ -17,7 +18,7 @@ function create(team) {
     teamService.create(team)
       .then(
         resp => {
-          dispatch(actions.success(teamConstants.CREATE_SUCCESS, {team}));
+          dispatch(actions.success(teamConstants.CREATE_SUCCESS, {team, resp}));
         },
         error => {
           console.log(error)
@@ -54,10 +55,43 @@ function getAll(page) {
   };
 }
 
-function getByUserID(id) {
+function getByUserName(username) {
   return dispatch => {
-    dispatch(actions.request(teamConstants.GETBY_USERID_REQUEST, {user_id: id}));
-    return teamService.getByUserName(id)
+    dispatch(actions.request(teamConstants.GETBY_USERNAME_REQUEST, {user_name: username}));
+    teamService.getByUserName(username)
+    .then(
+      data => dispatch(actions.success(teamConstants.GETBY_USERNAME_SUCCESS, data)),
+      error => {
+        console.log(error)
+        if (error.bodyUsed) {
+          error.data.then(error => {
+            dispatch(actions.failure(teamConstants.GETBY_USERNAME_FAILURE, error, null));
+          });
+        } else {
+          dispatch(actions.failure(teamConstants.GETBY_USERNAME_FAILURE, {message: error.message, errors: null}, null));
+        }
+      }
+    );
+  }
+}
+
+function getByMaster() {
+  return dispatch => {
+    dispatch(actions.request(teamConstants.GETBY_MASTER_REQUEST));
+    teamService.getByMaster()
+    .then(
+      data => dispatch(actions.success(teamConstants.GETBY_MASTER_SUCCESS, data)),
+      error => {
+        console.log(error)
+        if (error.bodyUsed) {
+          error.data.then(error => {
+            dispatch(actions.failure(teamConstants.GETBY_MASTER_FAILURE, error, null));
+          });
+        } else {
+          dispatch(actions.failure(teamConstants.GETBY_MASTER_FAILURE, {message: error.message, errors: null}, null));
+        }
+      }
+    );
   }
 }
 

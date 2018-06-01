@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { PostCard, ItemGrid } from 'components';
-import { Grid } from 'material-ui';
+import { Grid } from "@material-ui/core";
 import { actions, postActions } from 'actions';
 import { connect } from 'react-redux';
 import { postConstants } from '../../constants';
@@ -79,6 +79,7 @@ class PostDetail extends Component {
             comments={post.comments}
             enableExpandComment={true}
             onSubmitComment={this.handleSubmitComment}
+            history={this.props.history}
           />
         </ItemGrid>
       </Grid>

@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import { userActions, alertActions } from 'actions';
-import { Grid } from "material-ui";
+import { Grid } from "@material-ui/core";
 import {
   RegularCard,
   Button,

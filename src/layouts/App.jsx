@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 // creates a beautiful scrollbar
 import PerfectScrollbar from "perfect-scrollbar";
 import "perfect-scrollbar/css/perfect-scrollbar.css";
-import { withStyles } from "material-ui";
+import { withStyles } from "@material-ui/core";
 
 import { Header, Sidebar } from "components";
 import { AuthRoutes, authSidebar } from "routes/Auth/authRoutes.jsx"

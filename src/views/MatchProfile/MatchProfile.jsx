@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { MatchCard, ItemGrid, TeamCard } from 'components';
-import { Grid } from "@material-ui/core";
+import { Grid, Card } from "@material-ui/core";
 import { matchActions } from 'actions';
 
 class MatchProfile extends Component {
@@ -15,9 +15,14 @@ class MatchProfile extends Component {
     this.setState({team1, team2})
   }
 	render () {
+    console.log(this.props)
 		const { items } = this.props;
     return (
       <Grid container>
+        <ItemGrid xs={12} sm={12} md={12}>
+        <Card>
+        </Card>
+        </ItemGrid>
         <ItemGrid xs={12} sm={12} md={4}>
           {items.map((match, index) => {
             return (

@@ -4,6 +4,7 @@ export * from './post.actions';
 export * from './team.actions';
 export * from './comment.actions';
 export * from './match.actions';
+export * from './tournament.actions';
 export const actions = {
     request,
     success,

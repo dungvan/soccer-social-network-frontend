@@ -21,23 +21,27 @@ import Match from "views/Manager/Match/Match";
 import MatchProfile from "views/MatchProfile/MatchProfile";
 import TeamProfile from "views/TeamProfile/TeamProfile";
 import Team from "views/Manager/Team/Team";
+import MatchList from "views/Admin/MatchList/MatchList";
+import Tournament from "views/Manager/Tournament/Tournament";
 
 const AdminRoutes = () => {
   return (
     <Switch>
       <Route exact path="/admin" component={DashboardPage} />
-      <Route path="/user/:username" component={UserProfile} />
+      <Route exact path="/user/:username" component={UserProfile} />
       <Route path="/admin/users" component={UserList} />
       <Route path="/admin/posts" component={PostList} />
       <Route path="/admin/teams" component={TeamList} />
+      <Route path="/admin/matches" component={MatchList} />
       <Route exact path="/" component={PostExplore} />
       <Route path="/post/:id" component={PostDetail} />
       <Route path="/logout" component={Logout} />
       <Route path="/matches" component={MatchExplore} />
       <Route path="/managers/matches" component={Match} />
       <Route path="/managers/teams" component={Team} />
-      <Route path="/:username/matches" component={MatchProfile} />
-      <Route path="/:username/teams" component={TeamProfile} />
+      <Route path="/managers/tournaments" component={Tournament} />
+      <Route path="/user/:username/matches" component={MatchProfile} />
+      <Route path="/user/:username/teams" component={TeamProfile} />
     </Switch>
   );
 }
@@ -66,6 +70,12 @@ const adminSidebar = [
     sidebarName: "Team List",
     icon: Group,
     navbarName: "Team List"
+  },
+  {
+    path: "/admin/matches",
+    sidebarName: "Match List",
+    icon: Group,
+    navbarName: "Match List"
   },
   {
     path: "/logout",

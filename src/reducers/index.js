@@ -7,6 +7,7 @@ import { posts } from './posts.reducer';
 import { users } from './users.reducer';
 import { teams } from './teams.reducer';
 import { matches } from './matches.reducer';
+import { tournaments } from './tournaments.reducer';
 
 const rootReducer = combineReducers({
   authentication,
@@ -15,7 +16,8 @@ const rootReducer = combineReducers({
   posts,
   teams,
   alert,
-  matches
+  matches,
+  tournaments
 });
 
 export default rootReducer;

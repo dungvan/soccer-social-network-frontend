@@ -20,6 +20,9 @@ function getAll(page, search) {
     if (!page) {
         page = 1
     }
+    if (!search) {
+        search = ''
+    }
     return fetch(env.api+'/teams?page=' + page + '&search='+search, requestOptions).then(handleResponse);
 }
 

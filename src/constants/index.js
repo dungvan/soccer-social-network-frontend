@@ -4,3 +4,4 @@ export * from './post.constants';
 export * from './team.constants';
 export * from './comment.constants';
 export * from './match.constants';
+export * from './tournament.constants';

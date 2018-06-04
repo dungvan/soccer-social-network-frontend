@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { MatchCard, ItemGrid, TeamCard, AsynSelectWrapped } from 'components';
+import { MatchCard, ItemGrid, TeamCard, SelectWrapped } from 'components';
 import {
   Grid,
   withStyles,
@@ -127,6 +127,7 @@ const styles = theme => ({
       maxHeight: ITEM_HEIGHT * 4.5,
     },
     '.Select.is-focused:not(.is-open) > .Select-control': {
+      backgroundColor: '#fff',
       boxShadow: 'none',
     },
     '.Select-menu': {
@@ -226,16 +227,16 @@ class Match extends Component {
                 <TextField
                   style={{marginBottom: 20, display: 'inline-block', marginLeft: 20, marginRight: 20}}
                   fullWidth
-                  placeholder={null}
                   name="react-select-chip-label"
                   label="Select Two Team"
                   InputLabelProps={{
                     shrink: true
                   }}
                   InputProps={{
-                    inputComponent: AsynSelectWrapped,
+                    inputComponent: SelectWrapped,
                     inputProps: {
                       classes,
+                      async: true,
                       value:this.state.teamCreate,
                       onChange:this.handleTypeTeamChange,
                       multi: true,

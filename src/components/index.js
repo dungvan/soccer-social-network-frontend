@@ -10,6 +10,7 @@ import TasksCard from "./Cards/TasksCard.jsx";
 import PostCard from "./Cards/PostCard.jsx";
 import MatchCard from "./Cards/MatchCard.jsx";
 import TeamCard from "./Cards/TeamCard.jsx";
+import UserCard from "./Cards/UserCard.jsx";
 
 // ##############################
 // // // CustomButtons
@@ -67,7 +68,7 @@ import Table from "./Table/Table.jsx";
 // // // Table
 // #############################
 
-import AsynSelectWrapped from "./Select/AsynSelectWrapped.jsx";
+import SelectWrapped from "./Select/SelectWrapped.jsx";
 
 // ##############################
 // // // Tasks
@@ -100,6 +101,7 @@ export {
   PostCard,
   MatchCard,
   TeamCard,
+  UserCard,
   // CustomButtons
   Button,
   IconButton,
@@ -121,7 +123,7 @@ export {
   // Table
   Table,
   // Select
-  AsynSelectWrapped,
+  SelectWrapped,
   // Tasks
   Tasks,
   // Typography

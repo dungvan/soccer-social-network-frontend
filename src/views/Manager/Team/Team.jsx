@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import classnames from 'classnames';
-import { ItemGrid, AsynSelectWrapped } from 'components';
+import { ItemGrid, SelectWrapped } from 'components';
 import {
   withStyles,
   Grid,
@@ -246,9 +246,10 @@ class Team extends Component {
                     shrink: true
                   }}
                   InputProps={{
-                    inputComponent: AsynSelectWrapped,
+                    inputComponent: SelectWrapped,
                     inputProps: {
                       classes,
+                      async: true,
                       value:this.state.users,
                       onChange:this.handleTypeUserChange,
                       multi: true,

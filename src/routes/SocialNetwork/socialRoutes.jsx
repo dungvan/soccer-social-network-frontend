@@ -11,9 +11,9 @@ import TeamProfile from "views/TeamProfile/TeamProfile";
 import Team from "views/Manager/Team/Team";
 import Tournament from "views/Manager/Tournament/Tournament";
 import {
-  Home,
   Person,
-  PowerSettingsNew
+  PowerSettingsNew,
+  Group
 } from "@material-ui/icons";
 import { getCurrentUsername } from "../../utils";
 
@@ -36,16 +36,28 @@ const SocialRoutes = () => {
 
 const socialSidebar = [
   {
-    path: "/",
-    sidebarName: "Home",
-    icon: Home,
-    navbarName: "Home"
-  },
-  {
     path: "/user/" + getCurrentUsername(),
     sidebarName: "User Profile",
     icon: Person,
     navbarName: "User Profile"
+  },
+  {
+    path: "/managers/teams",
+    sidebarName: "Teams",
+    icon: Group,
+    navbarName: "Teams"
+  },
+  {
+    path: "/managers/matches",
+    sidebarName: "Matches",
+    icon: Group,
+    navbarName: "Matches"
+  },
+  {
+    path: "/managers/tournaments",
+    sidebarName: "Tournaments",
+    icon: Group,
+    navbarName: "Tournaments"
   },
   {
     path: "/logout",

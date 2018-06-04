@@ -23,6 +23,7 @@ import TeamProfile from "views/TeamProfile/TeamProfile";
 import Team from "views/Manager/Team/Team";
 import MatchList from "views/Admin/MatchList/MatchList";
 import Tournament from "views/Manager/Tournament/Tournament";
+import Find from "../../views/Find/Find";
 
 const AdminRoutes = () => {
   return (
@@ -42,6 +43,7 @@ const AdminRoutes = () => {
       <Route path="/managers/tournaments" component={Tournament} />
       <Route path="/user/:username/matches" component={MatchProfile} />
       <Route path="/user/:username/teams" component={TeamProfile} />
+      <Route path="/find" component={Find} />
     </Switch>
   );
 }

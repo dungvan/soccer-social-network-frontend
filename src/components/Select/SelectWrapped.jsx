@@ -1,12 +1,11 @@
 import React, {Component} from 'react';
-import Typography from '@material-ui/core/Typography';
 import MenuItem from '@material-ui/core/MenuItem';
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import CancelIcon from '@material-ui/icons/Cancel';
 import ArrowDropUpIcon from '@material-ui/icons/ArrowDropUp';
 import ClearIcon from '@material-ui/icons/Clear';
 import Chip from '@material-ui/core/Chip';
-import { Async } from 'react-select';
+import Select, { Async } from 'react-select';
 import 'react-select/dist/react-select.css';
 
 class Option extends Component {
@@ -34,13 +33,13 @@ class Option extends Component {
 }
 
 
-export default function AsynSelectWrapped(props) {
+export default function SelectWrapped(props) {
   const { classes, ...other } = props;
-
+  const Sel = !props.async ? Select : Async
   return (
-    <Async
+    <Sel
       optionComponent={Option}
-      noResultsText={<Typography>{'No results found'}</Typography>}
+      noResultsText={null}
       arrowRenderer={arrowProps => {
         return arrowProps.isOpen ? <ArrowDropUpIcon /> : <ArrowDropDownIcon />;
       }}

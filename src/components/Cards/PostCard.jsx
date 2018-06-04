@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import {
   withStyles,
   IconButton,
+  Button,
   Avatar,
   Card,
   CardHeader,
@@ -136,6 +137,11 @@ const styles = theme => ({
       cursor: 'pointer',
       textDecoration: 'underline'
     }
+  },
+  popover: {
+    '&:hover': {
+      cursor: 'pointer'
+    }
   }
 });
 
@@ -252,8 +258,9 @@ class PostCard extends React.Component {
               <IconButton onClick={()=>{this.setState({disablePopover: !this.state.disablePopover})}}>
                 <MoreVert />
               </IconButton>
+              {!this.state.disablePopover &&
               <Popover 
-                open={!this.state.disablePopover}
+                open={true}
                 onClose={()=>{this.setState({disablePopover: true})}}
                 anchorOrigin={{
                   vertical: 'top',
@@ -264,9 +271,9 @@ class PostCard extends React.Component {
                   horizontal: 'left',
                 }}
               >
-                <Typography onClick={()=>{this.setState({disablePopover: true, disableUpdatePost:false})}}>edit</Typography>
-                <Typography onClick={()=>{this.props.onSubmitDeletePost(this.props.postID); this.setState({disablePopover: true})}}>delete</Typography>
-              </Popover>
+                <Button onClick={()=>{this.setState({disablePopover: true, disableUpdatePost:false})}}>edit</Button>
+                <Button onClick={()=>{this.props.onSubmitDeletePost(this.props.postID); this.setState({disablePopover: true})}}>delete</Button>
+              </Popover>}
               </div>
             }
             title={<span className={classnames(classes.titleName, classes.titleUserName)} onClick={() => {return this.props.history.push('/user/'+user.user_name)}}>{user.user_name}</span>}

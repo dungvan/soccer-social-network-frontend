@@ -16,7 +16,7 @@ import cx from "classnames";
 import headerStyle from "assets/jss/material-dashboard-react/headerStyle.jsx";
 
 import HeaderLinks from "./HeaderLinks";
-import { isAuthenticated, getCurrentUsername } from "../../utils";
+import { isAuthenticated } from "../../utils";
 
 class Header extends React.Component {
   state = {value: 0}
@@ -37,7 +37,6 @@ class Header extends React.Component {
   };
   render () {
     const { classes, color } = this.props;
-    console.log(this.props)
     const appBarClasses = cx({
       [" " + classes[color]]: color
     });
@@ -46,7 +45,7 @@ class Header extends React.Component {
       <AppBar className={classes.appBar + appBarClasses} style={{backgroundColor:'#3a3a6161'}}>
         <Toolbar className={classes.container}>
           <div className={classes.flex}>
-            { this.props.location.pathname.startsWith('/user/'+getCurrentUsername()) ?
+            { this.props.location.pathname.startsWith('/user/') ?
             <Tabs
               value={this.state.value}
               onChange={this.handlerChange}
@@ -59,16 +58,18 @@ class Header extends React.Component {
               <Tab label="Teams" onClick={()=>{this.props.history.push(function(pathname){var afterUser = pathname.indexOf("/", 6); if (afterUser === -1) return pathname; else return pathname.substring(0, afterUser)}(this.props.location.pathname)+"/teams")}} />
               <Tab label="Matches" onClick={()=>{this.props.history.push(function(pathname){var afterUser = pathname.indexOf("/", 6); if (afterUser === -1) return pathname; else return pathname.substring(0, afterUser)}(this.props.location.pathname)+"/matches")}} />
             </Tabs>
+              : this.props.location.pathname.startsWith('/find') ? 
+              <Button className={classes.title}>
+                Search page
+              </Button>
               :(<Button className={classes.title}>
                 {this.makeBrand()}
               </Button>)
             }
           </div>
-          <Hidden smDown implementation="css">
           {
-            isAuthenticated() && <HeaderLinks />
+            isAuthenticated() && <HeaderLinks history={this.props.history} />
           }
-          </Hidden>
           <Hidden mdUp>
             <IconButton
               className={classes.appResponsive}

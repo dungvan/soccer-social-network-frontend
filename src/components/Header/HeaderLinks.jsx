@@ -1,57 +1,100 @@
 import React from "react";
+import { connect } from 'react-redux';
 import { NavLink } from 'react-router-dom';
-import classNames from "classnames";
-import { Manager, Target, Popper } from "react-popper";
 import {
   withStyles,
   IconButton,
-  MenuItem,
-  MenuList,
-  Grow,
-  Paper,
-  ClickAwayListener,
-  Hidden
+  Hidden,
+  TextField,
+  CardHeader
 } from "@material-ui/core";
-import { Person, Notifications, Dashboard, Search } from "@material-ui/icons";
+import { Person, Dashboard, Search } from "@material-ui/icons";
 
-import { CustomInput, IconButton as SearchButton } from "components";
+import { IconButton as SearchButton, SelectWrapped } from "components";
 
 import headerLinksStyle from "assets/jss/material-dashboard-react/headerLinksStyle";
 import { getCurrentUsername } from "../../utils";
+import { userService, teamService } from "../../services";
 
 class HeaderLinks extends React.Component {
   state = {
-    open: false
-  };
-  handleClick = () => {
-    this.setState({ open: !this.state.open });
+    search: '',
+    options: []
   };
 
-  handleClose = () => {
-    this.setState({ open: false });
+  search=''
+
+  handleChange = value => {
+    this.setState({search: value.name})
+    if (value.type === 'user') {
+      window.location.href = '/user/'+value.name
+    }
+  }
+
+  handleLoad(value) {
+    this.setState({options: []})
+    this.search = value
+    if (!value) {
+      return Promise.resolve({options: this.state.options});
+    }
+    return teamService.getAll(1, value).then(resp => {
+      let teamOptions = resp.teams.map(team=>({id: team.id, type: 'team', name: team.name}))
+      return userService.getAll(1, value).then(resp => {
+        let userOptions = resp.users.map(user=>({id: user.id, type: 'user', name: user.user_name}))
+        return {options: [...teamOptions, ...userOptions]}
+      })
+    })
   };
+  
+  renderOption = (option) => {
+    return (
+      <CardHeader
+        title={
+          <span style={{ fontWeight: 'bold', fontSize: '18px'}} >{option.name}<span style={{color: '#717171', marginLeft: 10, fontSize: '14px', fontWeight: 'nomal'}}>{option.type}</span></span>
+        }
+      />
+    );
+  }
+
+  handleSubmit = () => {
+    this.props.history.push("/find/?search="+this.search)
+  };
+
   render() {
     const { classes } = this.props;
-    const { open } = this.state;
     return (
       <div>
-        <CustomInput
-          formControlProps={{
-            className: classes.margin + " " + classes.search
-          }}
-          inputProps={{
-            placeholder: "Search",
+        <TextField
+          style={{width: 350}}
+          InputProps={{
+            inputComponent: SelectWrapped,
+            id:"react-select-single",
             inputProps: {
-              "aria-label": "Search"
-            }
+              classes,
+              async: true,
+              placeholder: "text to search",
+              ignoreCase: false,
+              name: 'react-select-single',
+              instanceId: 'react-select-single',
+              onChange: this.handleChange,
+              value: this.state.search,
+              options: this.state.options,
+              valueKey: 'id',
+              labelKey: 'name',
+              loadOptions: this.handleLoad.bind(this),
+              optionRenderer: this.renderOption
+            },
           }}
         />
         <SearchButton
           color="white"
           aria-label="edit"
           customClass={classes.margin + " " + classes.searchButton}
+          onClick={this.handleSubmit}
         >
-          <Search className={classes.searchIcon} />
+          <Search className={classes.searchIcon}
+
+          />
         </SearchButton>
         <NavLink to="/">
         <IconButton
@@ -65,79 +108,6 @@ class HeaderLinks extends React.Component {
           </Hidden>
         </IconButton>
         </NavLink>
-        <Manager style={{ display: "inline-block" }}>
-          <Target>
-            <IconButton
-              color="inherit"
-              aria-label="Notifications"
-              aria-owns={open ? "menu-list" : null}
-              aria-haspopup="true"
-              onClick={this.handleClick}
-              className={classes.buttonLink}
-            >
-              <Notifications className={classes.links} />
-              {false && <span className={classes.notifications}></span>}
-              { false && <Hidden mdUp>
-                <p onClick={this.handleClick} className={classes.linkText}>
-                  Notification
-                </p>
-              </Hidden>}
-            </IconButton>
-          </Target>
-          { false && <Popper
-            placement="bottom-start"
-            eventsEnabled={open}
-            className={
-              classNames({ [classes.popperClose]: !open }) +
-              " " +
-              classes.pooperResponsive
-            }
-          >
-            <ClickAwayListener onClickAway={this.handleClose}>
-              <Grow
-                in={open}
-                id="menu-list"
-                style={{ transformOrigin: "0 0 0" }}
-              >
-                <Paper className={classes.dropdown}>
-                  <MenuList role="menu">
-                    <MenuItem
-                      onClick={this.handleClose}
-                      className={classes.dropdownItem}
-                    >
-                      Mike John responded to your email
-                    </MenuItem>
-                    <MenuItem
-                      onClick={this.handleClose}
-                      className={classes.dropdownItem}
-                    >
-                      You have 5 new tasks
-                    </MenuItem>
-                    <MenuItem
-                      onClick={this.handleClose}
-                      className={classes.dropdownItem}
-                    >
-                      You're now friend with Andrew
-                    </MenuItem>
-                    <MenuItem
-                      onClick={this.handleClose}
-                      className={classes.dropdownItem}
-                    >
-                      Another Notification
-                    </MenuItem>
-                    <MenuItem
-                      onClick={this.handleClose}
-                      className={classes.dropdownItem}
-                    >
-                      Another One
-                    </MenuItem>
-                  </MenuList>
-                </Paper>
-              </Grow>
-            </ClickAwayListener>
-          </Popper>
-          }
-        </Manager>
         <NavLink to={"/user/"+getCurrentUsername()}>
         <IconButton
           color="inherit"
@@ -155,4 +125,14 @@ class HeaderLinks extends React.Component {
   }
 }
 
-export default withStyles(headerLinksStyle)(HeaderLinks);
+const mapStateToProps = (state) => {
+  const userItems = state.users.items;
+  const teamItems = state.teams.items;
+  return {
+    userItems,
+    teamItems
+  }
+}
+
+export default connect(mapStateToProps, {
+})(withStyles(headerLinksStyle)(HeaderLinks));

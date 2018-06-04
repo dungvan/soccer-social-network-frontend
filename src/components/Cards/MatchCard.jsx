@@ -18,7 +18,6 @@ const styles = theme => ({
     display: 'inline-block',
     maxWidth: 309,
     borderRadius: 10,
-    border: '2px solid #1927d4',
     marginTop: 10,
     marginBottom: 10,
     backgroundColor: '#fafafa',

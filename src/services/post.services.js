@@ -7,6 +7,7 @@ export const postService = {
   getByUser,
   upStar,
   downStar,
+  getByHashtag,
   getOne,
   create,
   update,
@@ -28,6 +29,16 @@ function uploadImages(files) {
   return fetch(env.api+"/posts/images", requestOptions).then(handleResponse);
 }
 
+function getByHashtag(hashtag) {
+    const requestOptions = {
+        method: 'GET',
+        mode: 'CORS',
+        headers: authHeader()
+    };
+
+    return fetch(env.api+'/posts/hashtags?keyword=' + hashtag, requestOptions).then(handleResponse);
+} 
+
 function getAll(page) {
     const requestOptions = {
         method: 'GET',
@@ -38,14 +49,14 @@ function getAll(page) {
     return fetch(env.api+'/posts?page=' + page, requestOptions).then(handleResponse);
 }
 
-function getByUser(id) {
+function getByUser(username) {
     const requestOptions = {
         method: 'GET',
         mode: 'CORS',
         headers: authHeader()
     };
 
-    return fetch(env.api+'/posts/users/' + id, requestOptions).then(handleResponse);
+    return fetch(env.api+'/posts/users/' + username, requestOptions).then(handleResponse);
 }
 
 function getOne(id) {

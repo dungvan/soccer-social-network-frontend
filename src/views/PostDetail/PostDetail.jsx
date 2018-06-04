@@ -29,7 +29,16 @@ class PostDetail extends Component {
   }
 
   handleSubmitComment = (cmt) => {
+    console.log(cmt)
     this.props.submitComment(cmt)
+  }
+
+  handleSubmitUpdatePost = (post) => {
+    this.props.updatePost(post)
+  }
+  handleDeletePost = (id) => {
+    this.props.delete(id)
+    this.props.history.push("/")
   }
 
   async componentWillMount(){
@@ -57,30 +66,26 @@ class PostDetail extends Component {
     }
   }
 
-  componentWillReceiveProps() {
-    if (!!this.props.newComment) {
-      this.setState({...this.state.post, comments: [...this.state.post.comments, this.props.newComment]})
-    }
-  }
-
   render() {
-    const {post} = this.state;
+    const {post} = this.props;
     return (
       <Grid container>
         <ItemGrid xs={12} sm={12} md={6}>
-          <PostCard
+          {post.id && <PostCard
             postID={post.id}
             star={post.star_flag}
+            user={post.user}
             starCount={post.star_count}
-            name={post.user.user_name}
             postDate={new Date(post.created_at)}
             content={post.caption}
             mediaImages={post.image_urls}
             comments={post.comments}
             enableExpandComment={true}
             onSubmitComment={this.handleSubmitComment}
+            onSubmitUpdatePost={this.handleSubmitUpdatePost}
+            onSubmitDeletePost={this.handleDeletePost}
             history={this.props.history}
-          />
+          />}
         </ItemGrid>
       </Grid>
     );
@@ -88,13 +93,14 @@ class PostDetail extends Component {
 }
 
 const mapStateToProps = (state) => {
-  const { loading, newComment } = state.posts;
-  return { loading, newComment }
+  const { loading, newComment, post } = state.posts;
+  return { loading, newComment, post }
 }
 
 export default connect(mapStateToProps, {
   getOne: postActions.getOne,
   submitComment: commentActions.create,
+  updatePost: postActions.update,
   delete: postActions.delete,
   dispatchFailure: actions.failure,
   dispatchSuccess: actions.success

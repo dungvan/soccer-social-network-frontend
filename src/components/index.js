@@ -11,6 +11,7 @@ import PostCard from "./Cards/PostCard.jsx";
 import MatchCard from "./Cards/MatchCard.jsx";
 import TeamCard from "./Cards/TeamCard.jsx";
 import UserCard from "./Cards/UserCard.jsx";
+import PostFindCard from "./Cards/PostFindCard";
 
 // ##############################
 // // // CustomButtons
@@ -102,6 +103,7 @@ export {
   MatchCard,
   TeamCard,
   UserCard,
+  PostFindCard,
   // CustomButtons
   Button,
   IconButton,

@@ -55,6 +55,7 @@ class Header extends React.Component {
               scrollButtons="auto"
             >
               <Tab label="UserProfile" onClick={()=>{this.props.history.push(function(pathname){var afterUser =pathname.indexOf("/", 6); if (afterUser === -1) return pathname; else return pathname.substring(0, afterUser)}(this.props.location.pathname))}} />
+              <Tab label="Posts" onClick={()=>{this.props.history.push(function(pathname){var afterUser = pathname.indexOf("/", 6); if (afterUser === -1) return pathname; else return pathname.substring(0, afterUser)}(this.props.location.pathname)+"/posts")}} />
               <Tab label="Teams" onClick={()=>{this.props.history.push(function(pathname){var afterUser = pathname.indexOf("/", 6); if (afterUser === -1) return pathname; else return pathname.substring(0, afterUser)}(this.props.location.pathname)+"/teams")}} />
               <Tab label="Matches" onClick={()=>{this.props.history.push(function(pathname){var afterUser = pathname.indexOf("/", 6); if (afterUser === -1) return pathname; else return pathname.substring(0, afterUser)}(this.props.location.pathname)+"/matches")}} />
             </Tabs>

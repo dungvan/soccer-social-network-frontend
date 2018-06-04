@@ -8,7 +8,7 @@ import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 import { userActions, teamActions, matchActions, postActions } from 'actions';
 import { UserCard } from 'components'
-import { ItemGrid, TeamCard, MatchCard } from '../../components';
+import { ItemGrid, TeamCard, MatchCard, PostFindCard } from '../../components';
 
 function TabContainer(props) {
   return (
@@ -43,7 +43,7 @@ class ScrollableTabsButtonAuto extends React.Component {
     this.props.userSearch(1)
     this.props.teamSearch(1)
     this.props.matchSearch(1)
-    this.props.postSearch(1)
+    this.props.postSearch("c")
   }
 
   render() {
@@ -61,7 +61,6 @@ class ScrollableTabsButtonAuto extends React.Component {
             scrollable
             scrollButtons="auto"
           >
-            <Tab label="All" />
             <Tab label="Users" />
             <Tab label="Teams" />
             <Tab label="Matches" />
@@ -70,11 +69,7 @@ class ScrollableTabsButtonAuto extends React.Component {
         </AppBar>
         {value === 0 &&
           <TabContainer>
-            Item1
-          </TabContainer>}
-        {value === 1 &&
-          <TabContainer>
-            <ItemGrid xs={12} sm={12} md={12} style={{display: "block"}}>
+            <ItemGrid xs={12} sm={12} md={12} style={{display: "block", height: '100vh'}}>
             {
               this.props.userItems.map(user=>(
                 <ItemGrid xs={12} sm={12} md={4} key={"user"+user.id} style={{display: 'inline-block'}}>
@@ -84,9 +79,9 @@ class ScrollableTabsButtonAuto extends React.Component {
             }
             </ItemGrid>
           </TabContainer>}
-        {value === 2 &&
+        {value === 1 &&
           <TabContainer>
-          <ItemGrid xs={12} sm={12} md={12} style={{display: "block"}}>
+          <ItemGrid xs={12} sm={12} md={12} style={{display: "block", height: '100vh'}}>
             {
               this.props.teamItems.map(team=>(
                 <ItemGrid xs={12} sm={12} md={4} key={"team"+team.id} style={{display: 'inline-block'}}>
@@ -96,9 +91,9 @@ class ScrollableTabsButtonAuto extends React.Component {
             }
             </ItemGrid>
           </TabContainer>}
-        {value === 3 &&
+        {value === 2 &&
           <TabContainer>
-            <ItemGrid xs={12} sm={12} md={12} style={{display: "block"}}>
+            <ItemGrid xs={12} sm={12} md={12} style={{display: "block", height: '100vh'}}>
             {
               this.props.matchItems.map(match=>(
                 <ItemGrid xs={12} sm={12} md={4} key={"match"+match.id} style={{display: 'inline-block'}}>
@@ -116,7 +111,25 @@ class ScrollableTabsButtonAuto extends React.Component {
             }
             </ItemGrid>
           </TabContainer>}
-        {value === 4 && <TabContainer>Item Five</TabContainer>}
+        {value === 3 &&
+          <TabContainer>
+          <ItemGrid xs={12} sm={12} md={12} style={{display: "block", height: '100vh'}}>
+          {
+            this.props.postItems.map(post=>(
+              <ItemGrid xs={12} sm={12} md={6} key={"post"+post.id} style={{display: 'inline-block'}}>
+                <PostFindCard 
+                  history={this.props.history}
+                  postID={post.id}
+                  user={post.user}
+                  postDate={new Date(post.created_at)}
+                  mediaImages={post.image_urls}
+                  content={post.caption}
+                />
+              </ItemGrid>
+            ))
+          }
+          </ItemGrid>
+          </TabContainer>}
       </div>
     );
   }
@@ -143,5 +156,5 @@ export default connect(mapStateToProps, {
   userSearch: userActions.getAll,
   teamSearch: teamActions.getAll,
   matchSearch: matchActions.getAll,
-  postSearch: postActions.getAll
+  postSearch: postActions.getByHashtag
 })(withStyles(styles)(ScrollableTabsButtonAuto))

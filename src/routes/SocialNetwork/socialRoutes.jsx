@@ -9,13 +9,16 @@ import Match from "views/Manager/Match/Match";
 import MatchProfile from "views/MatchProfile/MatchProfile";
 import TeamProfile from "views/TeamProfile/TeamProfile";
 import Team from "views/Manager/Team/Team";
-import Tournament from "views/Manager/Tournament/Tournament";
 import {
   Person,
   PowerSettingsNew,
-  Group
+  Group,
+  FilterList
 } from "@material-ui/icons";
 import { getCurrentUsername } from "../../utils";
+import PostProfile from "views/PostProfile/PostProfile";
+import Find from "../../views/Find/Find";
+import MatchesFilter from "../../views/MatchesFilter/MatchesFilter";
 
 const SocialRoutes = () => {
   return (
@@ -26,15 +29,23 @@ const SocialRoutes = () => {
       <Route path="/matches" component={MatchExplore} />
       <Route path="/managers/matches" component={Match} />
       <Route path="/managers/teams" component={Team} />
-      <Route path="/managers/tournaments" component={Tournament} />
       <Route exact path="/user/:username" component={UserProfile} />
       <Route path="/user/:username/matches" component={MatchProfile} />
       <Route path="/user/:username/teams" component={TeamProfile} />
+      <Route path="/user/:username/posts" component={PostProfile} />
+      <Route path="/find" component={Find} />
+      <Route path="/matches-filter" component={MatchesFilter} />
     </Switch>
   );
 }
 
 const socialSidebar = [
+  {
+    path: "/matches-filter",
+    sidebarName: "Matches today",
+    icon: FilterList,
+    navbarName: "Matches today"
+  },
   {
     path: "/user/" + getCurrentUsername(),
     sidebarName: "User Profile",
@@ -52,12 +63,6 @@ const socialSidebar = [
     sidebarName: "Matches",
     icon: Group,
     navbarName: "Matches"
-  },
-  {
-    path: "/managers/tournaments",
-    sidebarName: "Tournaments",
-    icon: Group,
-    navbarName: "Tournaments"
   },
   {
     path: "/logout",

@@ -24,6 +24,8 @@ import Team from "views/Manager/Team/Team";
 import MatchList from "views/Admin/MatchList/MatchList";
 import Tournament from "views/Manager/Tournament/Tournament";
 import Find from "../../views/Find/Find";
+import PostProfile from "../../views/PostProfile/PostProfile";
+import MatchesFilter from "../../views/MatchesFilter/MatchesFilter";
 
 const AdminRoutes = () => {
   return (
@@ -44,6 +46,8 @@ const AdminRoutes = () => {
       <Route path="/user/:username/matches" component={MatchProfile} />
       <Route path="/user/:username/teams" component={TeamProfile} />
       <Route path="/find" component={Find} />
+      <Route path="/user/:username/posts" component={PostProfile} />
+      <Route path="/matches-filter" component={MatchesFilter}  />
     </Switch>
   );
 }

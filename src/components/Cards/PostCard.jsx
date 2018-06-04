@@ -324,7 +324,7 @@ class PostCard extends React.Component {
               {
                 comments.map((comt, key) => {
                   return (
-                    <CommentCard comment={comt} key={comt.id} />
+                    <CommentCard comment={{...comt, post_id: this.props.postID}} key={comt.id} />
                   );
                 })
               }

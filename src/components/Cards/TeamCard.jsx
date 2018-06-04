@@ -13,7 +13,6 @@ const styles = theme => ({
     backgroundColor: '#fafafa',
     width: 300,
     borderRadius: 10,
-    border: '2px solid #1927d4',
     marginTop: 10,
     marginBottom: 10
   },

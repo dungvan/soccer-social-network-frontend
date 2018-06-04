@@ -7,10 +7,32 @@ export const postActions = {
   create,
   getAll,
   getByUser,
+  getByHashtag,
   getOne,
   update,
   delete: _delete
 };
+
+function getByHashtag(hashtag) {
+  return dispatch => {
+    dispatch(actions.request(postConstants.GETBY_HASHTAGS_REQUEST, {hashtag}));
+
+    postService.getByHashtag(hashtag)
+      .then(
+        data => dispatch(actions.success(postConstants.GETBY_HASHTAGS_SUCCESS, data)),
+        error => {
+          console.log(error)
+          if (error.bodyUsed) {
+            error.data.then(error => {
+              dispatch(actions.failure(postConstants.GETBY_HASHTAGS_FAILURE, error, null));
+            });
+          } else {
+            dispatch(actions.failure(postConstants.GETBY_HASHTAGS_FAILURE, {message: error.message, errors: null}, null));
+          }
+        }
+      );
+  };
+}
 
 function uploadImages(files) {
   return dispatch => {
@@ -62,20 +84,20 @@ function getAll(page) {
   };
 }
 
-function getByUser(id) {
+function getByUser(username) {
   return dispatch => {
-    dispatch(actions.request(postConstants.GETBY_USERID_REQUEST, {user_id: id}));
-    postService.getByUser(id)
+    dispatch(actions.request(postConstants.GETBY_USERNAME_REQUEST, {username: username}));
+    postService.getByUser(username)
     .then(
-      data => dispatch(actions.success(postConstants.GETBY_USERID_SUCCESS, data)),
+      data => dispatch(actions.success(postConstants.GETBY_USERNAME_SUCCESS, data)),
       error => {
         console.log(error)
         if (error.bodyUsed) {
           error.data.then(error => {
-            dispatch(actions.failure(postConstants.GETBY_USERID_FAILURE, error, null));
+            dispatch(actions.failure(postConstants.GETBY_USERNAME_FAILURE, error, null));
           });
         } else {
-          dispatch(actions.failure(postConstants.GETBY_USERID_FAILURE, {message: error.message, errors: null}, null));
+          dispatch(actions.failure(postConstants.GETBY_USERNAME_FAILURE, {message: error.message, errors: null}, null));
         }
       }
     );

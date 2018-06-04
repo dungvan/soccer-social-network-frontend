@@ -16,6 +16,7 @@ export function posts(state = {items: [], post: {}, total: 0, page: 1}, action) 
       return {
         ...state,
         newComment: action.data.comment,
+        post: (!!state.post && (state.post.id === action.data.comment.post_id)) ? {...state.post, comments: [...state.post.comments, action.data.comment]} : state.post,
         items: [...state.items.filter(post => post.id !== action.data.post_id), ...oldPost],
         loading: false
       };
@@ -24,6 +25,22 @@ export function posts(state = {items: [], post: {}, total: 0, page: 1}, action) 
         ...state,        
         loading: false
       };
+    case postConstants.GETONE_REQUEST:
+      return {
+        ...state,
+        loading: true,
+      }
+    case postConstants.GETONE_SUCCESS:
+      return {
+        ...state,
+        post: action.data.post,
+        loading: false
+      }
+    case postConstants.GETONE_FAILURE:
+      return {
+        ...state,
+        loading: false
+      }
     case postConstants.CREATE_REQUEST:
     return {
       ...state,
@@ -58,8 +75,45 @@ export function posts(state = {items: [], post: {}, total: 0, page: 1}, action) 
       return { 
         ...state,
         loading: false,
-        message: action.message,
-        errors: action.errors
+        message: action.message
+      };
+    case postConstants.GETBY_HASHTAGS_REQUEST:
+      return {
+        ...state,
+        page: action.data.page ? action.data.page : 1,
+        loading: true
+      }
+    case postConstants.GETBY_HASHTAGS_SUCCESS:
+      return {
+        ...state,
+        total: !!action.data.total ? action.data.total : 0,
+        items: action.data.posts,
+        loading: true
+      }
+    case postConstants.GETBY_HASHTAGS_FAILURE:
+      return { 
+        ...state,
+        loading: false,
+        message: action.message
+      };
+    case postConstants.GETBY_USERNAME_REQUEST:
+      return {
+        ...state,
+        page: action.data.page ? action.data.page : 1,
+        loading: true
+      }
+    case postConstants.GETBY_USERNAME_SUCCESS:
+      return {
+        ...state,
+        total: !!action.data.total ? action.data.total : 0,
+        items: action.data.posts,
+        loading: true
+      }
+    case postConstants.GETBY_USERNAME_FAILURE:
+      return { 
+        ...state,
+        loading: false,
+        message: action.message
       };
     case postConstants.DELETE_REQUEST:
       // add 'deleting:true' property to user being deleted

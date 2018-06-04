@@ -10,7 +10,7 @@ import {
   ItemGrid
 } from "components";
 
-import avatar from "assets/img/faces/marc.jpg";
+import avatar from "assets/img/faces/default-user.jpg";
 import { actions, userActions, alertActions } from "actions";
 import { userConstants, alertConstants } from "../../constants";
 import { withSwalInstance } from 'sweetalert2-react';

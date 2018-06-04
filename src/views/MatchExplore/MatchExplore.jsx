@@ -16,7 +16,12 @@ class MatchExplore extends Component {
     this.setState({team1, team2})
   }
 	render () {
-		const { items } = this.props;
+    let items = []
+    if (!!this.props.filter) {
+	    items = this.props.items.filter(item=>(new Date(item.start_date).toLocaleDateString("vi-VN") === new Date(this.props.filter).toLocaleDateString("vi-VN")));
+    } else {
+      items = this.props.items
+    }
     return (
       <Grid container>
         <ItemGrid xs={12} sm={12} md={4}>
@@ -64,7 +69,7 @@ class MatchExplore extends Component {
 }
 
 const mapStateToProps = (state) => {
-  const { items } = state.matches;
+  let { items } = state.matches;
 	return { items }
 }
 

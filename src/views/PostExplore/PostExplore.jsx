@@ -19,7 +19,6 @@ class PostExplore extends Component {
     this.props.updatePost(post)
   }
   handleDeletePost = (id) => {
-    console.log("deleted "+ id)
     this.props.delete(id)
   }
 

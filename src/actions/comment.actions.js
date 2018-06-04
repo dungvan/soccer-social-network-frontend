@@ -15,7 +15,6 @@ function create(comment) {
     commentService.create(comment)
       .then(
         resp => {
-          console.log(resp)
           dispatch(actions.success(commentConstants.CREATE_SUCCESS, {comment: resp, post_id: comment.post_id}));
         },
         error => {
